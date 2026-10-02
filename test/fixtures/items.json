@@ -34,13 +34,13 @@
       "title": "Decide the widget naming scheme",
       "body": "Q: which prefix?\n\n- A) org.example\n- B) io.example\n",
       "updated_at": "2026-01-03T00:00:00Z",
-      "user": {"login": "cgwalters-bot"}
+      "user": {"login": "jmarrero-bot"}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
       {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Naming decision before v1."}},
       {"id": 104, "name": "Priority", "data_type": "single_select", "value": {"id": "p0", "name": {"raw": "P0"}}},
-      {"id": 107, "name": "Gist", "data_type": "text", "value": {"raw": "https://gist.github.com/cgwalters-bot/0123abcd"}}
+      {"id": 107, "name": "Gist", "data_type": "text", "value": {"raw": "https://gist.github.com/jmarrero-bot/0123abcd"}}
     ],
     "archived_at": null
   },
@@ -52,10 +52,10 @@
       "node_id": "I_synthetic3",
       "title": "Tooling question",
       "body": "",
-      "html_url": "https://github.com/cgwalters-bot/example-tool/issues/7",
+      "html_url": "https://github.com/jmarrero-bot/example-tool/issues/7",
       "state": "open",
       "updated_at": "2026-01-04T00:00:00Z",
-      "user": {"login": "cgwalters-bot"}
+      "user": {"login": "jmarrero-bot"}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
@@ -102,10 +102,10 @@
       "node_id": "I_synthetic_tracker_20",
       "title": "Composefs stable",
       "body": "Tracking the stable format.",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/20",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/20",
       "state": "open",
       "updated_at": "2026-01-05T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": [],
       "comments": 0,
       "sub_issues_summary": {"total": 3, "completed": 1, "percent_completed": 33}
@@ -125,21 +125,21 @@
     "content": {
       "node_id": "I_synthetic_tracker_21",
       "title": "Which prefix for the stable format?",
-      "body": "Blocks: https://github.com/cgwalters-forge/tracker/issues/20\nThe stable format needs a name before v1.\n\nQ: Which prefix?\nOptions:\nA) org.example\nB) io.example\nRecommended: A, because it is registered\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/21",
+      "body": "Blocks: https://github.com/jmarrero-forge/tracker/issues/20\nThe stable format needs a name before v1.\n\nQ: Which prefix?\nOptions:\nA) org.example\nB) io.example\nRecommended: A, because it is registered\n",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/21",
       "state": "open",
       "updated_at": "2026-01-06T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": [{"name": "question"}],
-      "assignees": [{"login": "cgwalters"}],
+      "assignees": [{"login": "jmarrero"}],
       "comments": 2,
       "sub_issues_summary": {"total": 0, "completed": 0, "percent_completed": 0},
-      "parent_issue_url": "https://api.github.com/repos/cgwalters-forge/tracker/issues/20"
+      "parent_issue_url": "https://api.github.com/repos/jmarrero-forge/tracker/issues/20"
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
       {"id": 104, "name": "Priority", "data_type": "single_select", "value": {"id": "p", "name": {"raw": "P0"}}},
-      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for cgwalters."}}
+      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for jmarrero."}}
     ],
     "created_at": "2026-01-06T00:00:00Z",
     "archived_at": null
@@ -152,19 +152,19 @@
       "node_id": "I_synthetic_tracker_22",
       "title": "Rerun or rebase widget#42?",
       "body": "Blocks: `https://github.com/example-upstream/widget/pull/42`\nCI is red on an infra flake.\nQ: Rerun or rebase?\nOptions:\nA) Rerun the job\nB) Rebase onto main\nRecommended: A, because it is cheaper\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/22",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/22",
       "state": "open",
       "updated_at": "2026-01-07T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": ["question"],
-      "assignees": [{"login": "cgwalters"}],
+      "assignees": [{"login": "jmarrero"}],
       "comments": 0,
       "sub_issues_summary": {"total": 0, "completed": 0, "percent_completed": 0}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
       {"id": 104, "name": "Priority", "data_type": "single_select", "value": {"id": "p", "name": {"raw": "P1"}}},
-      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for cgwalters."}}
+      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for jmarrero."}}
     ],
     "created_at": "2026-01-07T00:00:00Z",
     "archived_at": null
@@ -176,19 +176,19 @@
     "content": {
       "node_id": "I_synthetic_tracker_23",
       "title": "Keep the old name?",
-      "body": "Blocks: https://github.com/cgwalters-bot/elsewhere/issues/5\nQ: Keep it?\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/23",
+      "body": "Blocks: https://github.com/jmarrero-bot/elsewhere/issues/5\nQ: Keep it?\n",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/23",
       "state": "closed",
       "updated_at": "2026-01-08T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": [{"name": "question"}],
-      "assignees": [{"login": "cgwalters"}],
+      "assignees": [{"login": "jmarrero"}],
       "comments": 3,
       "sub_issues_summary": {"total": 0, "completed": 0, "percent_completed": 0}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
-      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for cgwalters."}}
+      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Question for jmarrero."}}
     ],
     "created_at": "2026-01-08T00:00:00Z",
     "archived_at": null
@@ -225,19 +225,19 @@
       "node_id": "I_synthetic_tracker_24",
       "title": "Re-approve widget#50",
       "body": "Blocks: `https://github.com/example-upstream/widget/issues/7`\nAsk: Re-approve widget#50 at its new head, then the bot signs off\nReview: `https://github.com/example-upstream/widget/pull/50` at aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/24",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/24",
       "state": "open",
       "updated_at": "2026-01-10T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": [{"name": "review"}],
-      "assignees": [{"login": "cgwalters"}],
+      "assignees": [{"login": "jmarrero"}],
       "comments": 0,
       "sub_issues_summary": {"total": 0, "completed": 0, "percent_completed": 0}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
       {"id": 104, "name": "Priority", "data_type": "single_select", "value": {"id": "p", "name": {"raw": "P1"}}},
-      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Ask for cgwalters."}}
+      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Ask for jmarrero."}}
     ],
     "created_at": "2026-01-10T00:00:00Z",
     "archived_at": null
@@ -250,19 +250,19 @@
       "node_id": "I_synthetic_tracker_25",
       "title": "Rerun the arm legs",
       "body": "Blocks: `https://github.com/example-upstream/widget/issues/7`\nAsk: Rerun the two arm legs that lost their runner\nRerun: `https://github.com/example-upstream/widget/actions/runs/777`\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/25",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/25",
       "state": "open",
       "updated_at": "2026-01-11T00:00:00Z",
-      "user": {"login": "cgwalters-bot"},
+      "user": {"login": "jmarrero-bot"},
       "labels": [{"name": "chore"}],
-      "assignees": [{"login": "cgwalters"}],
+      "assignees": [{"login": "jmarrero"}],
       "comments": 0,
       "sub_issues_summary": {"total": 0, "completed": 0, "percent_completed": 0}
     },
     "fields": [
       {"id": 102, "name": "Status", "data_type": "single_select", "value": {"id": "x1", "name": {"raw": "Needs human"}}},
       {"id": 104, "name": "Priority", "data_type": "single_select", "value": {"id": "p", "name": {"raw": "P1"}}},
-      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Ask for cgwalters."}}
+      {"id": 103, "name": "Why", "data_type": "text", "value": {"raw": "Ask for jmarrero."}}
     ],
     "created_at": "2026-01-11T00:00:00Z",
     "archived_at": null

@@ -28,7 +28,7 @@ describe("findUsage", () => {
         { name: "ops-v2", tokens: { input: 20, output: 60000, cacheRead: 4000000, cacheWrite: 150000 } },
         { name: "bootc-2482", tokens: { input: 10, output: 9000, cacheRead: 800000, cacheWrite: 90000 } },
       ],
-      commentUrl: "https://github.com/cgwalters-forge/bot-ops/issues/1#issuecomment-2",
+      commentUrl: "https://github.com/jmarrero-forge/bot-ops/issues/1#issuecomment-2",
     });
   });
   it("finds nothing among others' comments", () => assert.equal(findUsage(comments().slice(0, 1)), undefined));
@@ -74,7 +74,7 @@ describe("loadUsage", () => {
   };
   it("reads the private repository's issue", async () => {
     const { data, path } = await load(200);
-    assert.equal(path, "/repos/cgwalters-forge/bot-ops/issues/1/comments");
+    assert.equal(path, "/repos/jmarrero-forge/bot-ops/issues/1/comments");
     assert.equal(!(data instanceof Error) && data.state, "ok");
   });
   it("says when none is published", async () => assert.deepEqual((await load(200, [])).data, { state: "none" }));

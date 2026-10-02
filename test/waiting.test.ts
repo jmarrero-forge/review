@@ -40,8 +40,8 @@ describe("dcoFailing", () => {
 });
 
 describe("unsignedCommits", () => {
-  const HIM = { name: "Colin Walters", email: "walters@verbum.org" };
-  const BOT = { name: "Colin Walters", email: "walters+llm@verbum.org" };
+  const HIM = { name: "Joseph Marrero Corchado", email: "jmarrero@redhat.com" };
+  const BOT = { name: "Joseph Marrero Corchado", email: "jmarrero+llm@gmail.com" };
   const commit = (sha: string, message: string, author = BOT, committer = HIM): RawPrCommit => ({ sha: sha.repeat(40), commit: { message, author, committer } });
   const signed = `fix: It\n\nGenerated-by: AI\n${signoffTrailer()}\n`;
   const cases: [string, RawPrCommit, boolean][] = [
@@ -104,7 +104,7 @@ describe("classifyPr", () => {
   const cases: [string, Partial<PrFacts>, PrWait["reasons"] | undefined, boolean][] = [
     ["nothing for anyone", {}, undefined, false],
     ["review requested", { requested: true }, his("review-requested"), false],
-    ["review requested in the bot's own repository", { owner: "cgwalters-bot", requested: true }, his("review-requested"), false],
+    ["review requested in the bot's own repository", { owner: "jmarrero-bot", requested: true }, his("review-requested"), false],
     ["changes requested, the bot silent", { verdict: v("changes-requested") }, [], true],
     ["changes requested, then the bot replied", { verdict: v("changes-requested"), botReplied: true }, his("updated"), false],
     ["changes requested, then the bot pushed", { verdict: v("changes-requested-older") }, his("updated"), false],
@@ -116,11 +116,11 @@ describe("classifyPr", () => {
     ["the bot replied, CI red", { verdict: v("changes-requested"), botReplied: true, ...red }, his("rerun", "updated"), false],
     ["DCO failing, but he approved the head (the bot signs off)", { ...dco, verdict: v("approved") }, undefined, false],
     ["DCO failing, every commit signed (someone else's problem)", { dcoFailing: true }, undefined, false],
-    ["DCO failing in the bot's own repository", { ...dco, owner: "cgwalters-forge" }, undefined, false],
+    ["DCO failing in the bot's own repository", { ...dco, owner: "jmarrero-forge" }, undefined, false],
     ["a failed required check", red, his("rerun"), false],
     ["a failed required check on a conflicting PR (the bot rebases)", { ...red, conflicting: true }, undefined, false],
     ["a failed required check with no Actions run", { failedRequired: [{ name: "ext" }] }, undefined, false],
-    ["a failed required check in the bot's own repository", { ...red, owner: "cgwalters-bot" }, undefined, false],
+    ["a failed required check in the bot's own repository", { ...red, owner: "jmarrero-bot" }, undefined, false],
     ["everything at once", { requested: true, ...dco, ...red }, his("review-requested", "resign", "rerun"), false],
   ];
   for (const [name, over, reasons, onBot] of cases) {
@@ -141,10 +141,10 @@ describe("botRepliedSince", () => {
   const at = "2026-09-01T10:00:00Z";
   const c = (login: string, created_at: string) => ({ user: { login }, created_at });
   const cases: [string, string | undefined, ReturnType<typeof c>[], boolean][] = [
-    ["the bot, after", at, [c("cgwalters-bot", "2026-09-01T11:00:00Z")], true],
-    ["the bot, before", at, [c("cgwalters-bot", "2026-09-01T09:00:00Z")], false],
+    ["the bot, after", at, [c("jmarrero-bot", "2026-09-01T11:00:00Z")], true],
+    ["the bot, before", at, [c("jmarrero-bot", "2026-09-01T09:00:00Z")], false],
     ["someone else, after", at, [c("someone", "2026-09-01T11:00:00Z")], false],
-    ["no decision date", undefined, [c("cgwalters-bot", "2026-09-01T11:00:00Z")], false],
+    ["no decision date", undefined, [c("jmarrero-bot", "2026-09-01T11:00:00Z")], false],
   ];
   for (const [name, since, comments, want] of cases) it(name, () => assert.equal(botRepliedSince(since, comments), want));
 });

@@ -22,21 +22,21 @@ const OLD = "b".repeat(40);
 describe("parseSearchPr", () => {
   it("parses a PR result", () => {
     const pr = parseSearchPr({
-      html_url: "https://github.com/cgwalters-forge/bootc/pull/30",
+      html_url: "https://github.com/jmarrero-forge/bootc/pull/30",
       title: " tests: Cover it ",
       body: null,
-      user: { login: "cgwalters-bot" },
+      user: { login: "jmarrero-bot" },
       created_at: "2026-01-01T00:00:00Z",
       updated_at: "2026-01-02T00:00:00Z",
       draft: true,
       pull_request: {},
     });
     assert.deepEqual(pr, {
-      ref: { owner: "cgwalters-forge", repo: "bootc", number: 30 },
-      url: "https://github.com/cgwalters-forge/bootc/pull/30",
+      ref: { owner: "jmarrero-forge", repo: "bootc", number: 30 },
+      url: "https://github.com/jmarrero-forge/bootc/pull/30",
       title: "tests: Cover it",
       body: "",
-      author: "cgwalters-bot",
+      author: "jmarrero-bot",
       createdAt: "2026-01-01T00:00:00Z",
       updatedAt: "2026-01-02T00:00:00Z",
       draft: true,
@@ -84,43 +84,43 @@ describe("reviewVerdict", () => {
   });
   const cases: [string, RawReview[], string, boolean][] = [
     ["no reviews", [], "none", true],
-    ["approved the head", [r("cgwalters", "APPROVED", HEAD, "2026-01-02")], "approved", false],
-    ["approved an older head", [r("cgwalters", "APPROVED", OLD, "2026-01-02")], "approved-older", true],
-    ["changes on the head", [r("cgwalters", "CHANGES_REQUESTED", HEAD, "2026-01-02")], "changes-requested", false],
-    ["changes, then a push", [r("cgwalters", "CHANGES_REQUESTED", OLD, "2026-01-02")], "changes-requested-older", true],
+    ["approved the head", [r("jmarrero", "APPROVED", HEAD, "2026-01-02")], "approved", false],
+    ["approved an older head", [r("jmarrero", "APPROVED", OLD, "2026-01-02")], "approved-older", true],
+    ["changes on the head", [r("jmarrero", "CHANGES_REQUESTED", HEAD, "2026-01-02")], "changes-requested", false],
+    ["changes, then a push", [r("jmarrero", "CHANGES_REQUESTED", OLD, "2026-01-02")], "changes-requested-older", true],
     ["someone else's approval", [r("someone", "APPROVED", HEAD, "2026-01-02")], "none", true],
-    ["comments don't decide", [r("cgwalters", "APPROVED", HEAD, "2026-01-01"), r("cgwalters", "COMMENTED", HEAD, "2026-01-03")], "approved", false],
-    ["the latest decides", [r("cgwalters", "APPROVED", HEAD, "2026-01-03"), r("cgwalters", "CHANGES_REQUESTED", HEAD, "2026-01-02")], "approved", false],
-    ["dismissed", [r("cgwalters", "APPROVED", HEAD, "2026-01-01"), r("cgwalters", "DISMISSED", HEAD, "2026-01-02")], "none", true],
+    ["comments don't decide", [r("jmarrero", "APPROVED", HEAD, "2026-01-01"), r("jmarrero", "COMMENTED", HEAD, "2026-01-03")], "approved", false],
+    ["the latest decides", [r("jmarrero", "APPROVED", HEAD, "2026-01-03"), r("jmarrero", "CHANGES_REQUESTED", HEAD, "2026-01-02")], "approved", false],
+    ["dismissed", [r("jmarrero", "APPROVED", HEAD, "2026-01-01"), r("jmarrero", "DISMISSED", HEAD, "2026-01-02")], "none", true],
   ];
   for (const [name, reviews, state, waits] of cases) {
     it(name, () => {
-      const v = reviewVerdict(reviews, HEAD, "cgwalters");
+      const v = reviewVerdict(reviews, HEAD, "jmarrero");
       assert.equal(v.state, state);
       assert.equal(waitsOnReviewer(v), waits);
     });
   }
 
   it("ignores undated reviews and keeps API order on ties", () => {
-    const undated = { ...r("cgwalters", "APPROVED", HEAD, "x"), submitted_at: null };
-    assert.equal(reviewVerdict([undated], HEAD, "cgwalters").state, "none");
-    const tie = [r("cgwalters", "APPROVED", HEAD, "2026-01-02T00:00:00Z"), r("cgwalters", "CHANGES_REQUESTED", HEAD, "2026-01-02T00:00:00Z")];
-    assert.equal(reviewVerdict(tie, HEAD, "cgwalters").state, "changes-requested");
+    const undated = { ...r("jmarrero", "APPROVED", HEAD, "x"), submitted_at: null };
+    assert.equal(reviewVerdict([undated], HEAD, "jmarrero").state, "none");
+    const tie = [r("jmarrero", "APPROVED", HEAD, "2026-01-02T00:00:00Z"), r("jmarrero", "CHANGES_REQUESTED", HEAD, "2026-01-02T00:00:00Z")];
+    assert.equal(reviewVerdict(tie, HEAD, "jmarrero").state, "changes-requested");
   });
 
   describe("with /promote comments, as bot-pr counts them", () => {
     const c = (login: string, body: string, at: string): RawIssueComment => ({ user: { login }, body, created_at: at, html_url: `https://github.com/c/${at}` });
     const cases: [string, RawReview[], RawIssueComment[], string, boolean][] = [
-      ["a /promote comment", [], [c("cgwalters", "looks good\n  /promote\t", "2026-01-02T00:00:00Z")], "promoted", true],
-      ["/promote --human-text", [], [c("cgwalters", "/promote --human-text", "2026-01-02T00:00:00Z")], "promoted", true],
-      ["a later approval wins", [r("cgwalters", "APPROVED", HEAD, "2026-01-03T00:00:00Z")], [c("cgwalters", "/promote", "2026-01-02T00:00:00Z")], "approved", false],
-      ["a later /promote wins", [r("cgwalters", "APPROVED", HEAD, "2026-01-01T00:00:00Z")], [c("cgwalters", "/promote", "2026-01-02T00:00:00Z")], "promoted", true],
+      ["a /promote comment", [], [c("jmarrero", "looks good\n  /promote\t", "2026-01-02T00:00:00Z")], "promoted", true],
+      ["/promote --human-text", [], [c("jmarrero", "/promote --human-text", "2026-01-02T00:00:00Z")], "promoted", true],
+      ["a later approval wins", [r("jmarrero", "APPROVED", HEAD, "2026-01-03T00:00:00Z")], [c("jmarrero", "/promote", "2026-01-02T00:00:00Z")], "approved", false],
+      ["a later /promote wins", [r("jmarrero", "APPROVED", HEAD, "2026-01-01T00:00:00Z")], [c("jmarrero", "/promote", "2026-01-02T00:00:00Z")], "promoted", true],
       ["someone else's /promote", [], [c("someone", "/promote", "2026-01-02T00:00:00Z")], "none", true],
-      ["/promote in prose", [], [c("cgwalters", "I'll /promote it later", "2026-01-02T00:00:00Z")], "none", true],
+      ["/promote in prose", [], [c("jmarrero", "I'll /promote it later", "2026-01-02T00:00:00Z")], "none", true],
     ];
     for (const [name, reviews, comments, state, waits] of cases) {
       it(name, () => {
-        const v = reviewVerdict(reviews, HEAD, "cgwalters", comments);
+        const v = reviewVerdict(reviews, HEAD, "jmarrero", comments);
         assert.equal(v.state, state);
         assert.equal(waitsOnReviewer(v), waits);
       });

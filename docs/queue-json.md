@@ -1,7 +1,7 @@
 # The `review-queue/v1` JSON document
 
 `review-queue --json` prints one JSON object describing what is waiting
-on cgwalters, built by the same code that ranks and filters the app's
+on jmarrero, built by the same code that ranks and filters the app's
 queue, so the two always agree. (For contributors: the types are
 `QueueJson` and `EntryJson` in `src/github/export.ts`.)
 
@@ -17,7 +17,7 @@ apply (jq's `.field` then reads `null`).
 |---|---|---|
 | `schema` | `"review-queue/v1"` | This document's schema. |
 | `generatedAt` | string | When it was read (ISO 8601, UTC). |
-| `filter` | string | The filter applied, as the app's token: `all`, `composefs` (all upstream work: every org but cgwalters-bot and cgwalters-forge), `infra` (those two orgs), `org:NAME`, `org:none`, optionally `+P0`..`+P3` or `+none`. |
+| `filter` | string | The filter applied, as the app's token: `all`, `composefs` (all upstream work: every org but jmarrero-bot and jmarrero-forge), `infra` (those two orgs), `org:NAME`, `org:none`, optionally `+P0`..`+P3` or `+none`. |
 | `counts.entries` | number | Top-level entries. |
 | `counts.rows` | number | Entries plus their nested asks. |
 | `counts.open` | number | Rows that need him: those whose action isn't `wait` or `see-asks` (a parent whose work is its nested asks). |

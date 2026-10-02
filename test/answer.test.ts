@@ -75,7 +75,7 @@ describe("parseQuestion", () => {
   const none = { blocks: undefined, ask: undefined, options: [], recommendation: undefined, problem: undefined };
   const B = "Blocks: https://github.com/o/r/issues/1";
   const full = [
-    "Blocks: https://github.com/cgwalters-forge/tracker/issues/12",
+    "Blocks: https://github.com/jmarrero-forge/tracker/issues/12",
     "The stable format needs a name.",
     "",
     "Q: Which prefix?",
@@ -89,7 +89,7 @@ describe("parseQuestion", () => {
       "the full format, recommendation first",
       full,
       {
-        blocks: "https://github.com/cgwalters-forge/tracker/issues/12",
+        blocks: "https://github.com/jmarrero-forge/tracker/issues/12",
         ask: "Which prefix?",
         options: ["A:org.example*", "B:io.example (see below)"],
         recommendation: "A, because it is registered",

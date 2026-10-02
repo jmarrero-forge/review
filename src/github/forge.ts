@@ -1,10 +1,10 @@
-// Forge PRs: the bot's draft PRs in cgwalters-forge that wait for
-// cgwalters' review. Pure functions over REST JSON (search results,
+// Forge PRs: the bot's draft PRs in jmarrero-forge that wait for
+// jmarrero's review. Pure functions over REST JSON (search results,
 // reviews, patches, checks) and the review the app submits, so tests
 // feed them synthetic payloads.
 //
 // The review is what `bot-pr promote` keys on: the latest APPROVED,
-// CHANGES_REQUESTED or DISMISSED review by cgwalters, or conversation
+// CHANGES_REQUESTED or DISMISSED review by jmarrero, or conversation
 // comment of his with a `/promote` line, decides, and an approval counts
 // only for the commit it names (commit_id), which must be the PR's
 // current head. So the app always submits with commit_id set to the head

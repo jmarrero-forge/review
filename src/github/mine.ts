@@ -14,7 +14,7 @@
 // bin/bot-pr.
 //
 // Writing with his token is an exception to the app's review-only role,
-// so it is kept narrow: only the bot's PRs within a cgwalters-forge fork,
+// so it is kept narrow: only the bot's PRs within a jmarrero-forge fork,
 // from a `bot/` branch; trees are never changed (each new commit is
 // checked against the old one); the ref moves only from the head he saw;
 // and nothing is written before he confirms the diff of the messages.
@@ -42,7 +42,7 @@ export const BRANCH_PREFIX = "bot/";
 /** Commits rewritten at most: more is a job for a checkout. */
 export const MAX_COMMITS = 50;
 /** The bot's trailer in PR bodies, which promote refuses in his text. */
-export const LLMS_TRAILER = "Generated-by: https://github.com/cgwalters/#llms";
+export const LLMS_TRAILER = "Generated-by: https://github.com/jmarrero/#llms";
 /**
  * bot-pr counts a `/promote` comment only if it is strictly later, to
  * the second, than the push: the latest of the fork's activity log entry
@@ -64,7 +64,7 @@ export function hasGeneratedBy(text: string): boolean {
 }
 
 /** The committer promote signs off as; the form starts with it. */
-export const DEFAULT_COMMITTER: Readonly<Identity> = { name: "Colin Walters", email: "walters@verbum.org" };
+export const DEFAULT_COMMITTER: Readonly<Identity> = { name: "Joseph Marrero Corchado", email: "jmarrero@redhat.com" };
 
 /** Where GitHub keeps workflows: pushing changes there needs the workflow scope. */
 export const WORKFLOWS_DIR = ".github/workflows/";

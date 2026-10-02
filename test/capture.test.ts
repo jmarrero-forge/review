@@ -56,16 +56,16 @@ describe("captureRequest", () => {
 });
 
 describe("fileCapture", () => {
-  const ISSUES = `${API}/repos/cgwalters-forge/tracker/issues`;
-  const BOARD = `${API}/orgs/cgwalters-forge/projectsV2/1/items`;
-  const created = { body: { id: 991, number: 42, html_url: "https://github.com/cgwalters-forge/tracker/issues/42" }, status: 201 };
+  const ISSUES = `${API}/repos/jmarrero-forge/tracker/issues`;
+  const BOARD = `${API}/orgs/jmarrero-forge/projectsV2/1/items`;
+  const created = { body: { id: 991, number: 42, html_url: "https://github.com/jmarrero-forge/tracker/issues/42" }, status: 201 };
   const run = (issue: Scripted, board: Scripted) => {
     const { fetchImpl, calls } = scriptedFetch((m, url) => (m === "POST" && url === ISSUES ? issue : m === "POST" && url === BOARD ? board : undefined));
     return { calls, result: fileCapture(new GitHub(token, fetchImpl), draft({ title: "T", url: "https://github.com/o/r/issues/1" })) };
   };
   it("creates the labelled issue, then adds it to the board by id", async () => {
     const { calls, result } = run(created, { status: 201, body: { id: 5 } });
-    assert.deepEqual(await result, { number: 42, url: "https://github.com/cgwalters-forge/tracker/issues/42" });
+    assert.deepEqual(await result, { number: 42, url: "https://github.com/jmarrero-forge/tracker/issues/42" });
     assert.deepEqual(calls.map((c) => [c.method, c.url]), [["POST", ISSUES], ["POST", BOARD]]);
     assert.deepEqual(calls[0]?.body, { title: "T", body: "https://github.com/o/r/issues/1", labels: [CAPTURE_LABEL] });
     assert.deepEqual(calls[1]?.body, { type: "Issue", id: 991 });
@@ -120,7 +120,7 @@ class MemStorage {
   }
 }
 const mem = () => new MemStorage() as unknown as Storage;
-const filedOk = async (): Promise<Filed> => ({ number: 42, url: "https://github.com/cgwalters-forge/tracker/issues/42" });
+const filedOk = async (): Promise<Filed> => ({ number: 42, url: "https://github.com/jmarrero-forge/tracker/issues/42" });
 
 describe("captureBar", () => {
   it("files the draft, shows Filed #N with a link, and clears the form and the draft", async () => {
@@ -132,7 +132,7 @@ describe("captureBar", () => {
     await m.submit();
     assert.deepEqual(sent, { title: "Look at X", body: "", url: "" });
     assert.equal(m.status().textContent, "Filed #42.");
-    assert.equal(m.status().querySelector("a")?.getAttribute("href"), "https://github.com/cgwalters-forge/tracker/issues/42");
+    assert.equal(m.status().querySelector("a")?.getAttribute("href"), "https://github.com/jmarrero-forge/tracker/issues/42");
     assert.ok(!m.status().classList.contains("warn"));
     assert.equal(m.q<HTMLInputElement>(".capture-title").value, "");
     assert.equal(storage.getItem(CAPTURE_DRAFT_KEY), null);

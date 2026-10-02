@@ -178,7 +178,7 @@ describe("reviewAskFor", () => {
   it("finds the open review ask naming a PR, in any case", () => {
     const found = reviewAskFor(items, { owner: "Example-Upstream", repo: "widget", number: 50 });
     assert.equal(found?.item.nodeId, "PVTI_synthetic_review_ask");
-    assert.deepEqual(found?.ref, { owner: "cgwalters-forge", repo: "tracker", number: 24 });
+    assert.deepEqual(found?.ref, { owner: "jmarrero-forge", repo: "tracker", number: 24 });
     assert.equal(found?.target.head, SHA);
   });
   it("finds nothing for another PR, or an ask it can't act on", () => {

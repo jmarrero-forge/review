@@ -6,13 +6,13 @@ import { type Io, parseArgs, readOnly, run, tokenFrom, UsageError } from "../src
 import { fields, fixture, rawItems, scriptedFetch, type Scripted } from "./helpers.ts";
 
 const API = "https://api.github.com";
-const PROJECT = `${API}/orgs/cgwalters-forge/projectsV2/1`;
+const PROJECT = `${API}/orgs/jmarrero-forge/projectsV2/1`;
 const NOW = new Date("2026-01-20T00:00:00Z");
 const HEAD = "a".repeat(40);
 const OLD = "b".repeat(40);
 
 /** His review of a forge PR at `commit`. */
-const approved = (commit: string) => [{ user: { login: "cgwalters" }, state: "APPROVED", submitted_at: "2026-01-11T00:00:00Z", commit_id: commit }];
+const approved = (commit: string) => [{ user: { login: "jmarrero" }, state: "APPROVED", submitted_at: "2026-01-11T00:00:00Z", commit_id: commit }];
 
 /** The board, the forge and their reviews, from fixtures; anything else is unexpected. */
 function world(method: string, url: string): Scripted | undefined {
@@ -21,17 +21,17 @@ function world(method: string, url: string): Scripted | undefined {
   if (url.startsWith(`${PROJECT}/fields`)) return { body: fields() };
   if (url.startsWith(`${PROJECT}/items`)) return { body: [...rawItems(), ...fixture<unknown[]>("cli-questions.json")] };
   if (path.startsWith("/search/issues?")) return { body: fixture("forge-search.json") };
-  const pulls = /^\/repos\/cgwalters-forge\/(\w+)\/pulls\?state=open/.exec(path);
+  const pulls = /^\/repos\/jmarrero-forge\/(\w+)\/pulls\?state=open/.exec(path);
   if (pulls) {
     const n = { widget: 5, homegit: 9, bootc: 3 }[pulls[1] as string];
     return { body: [{ number: n, html_url: "", head: { sha: HEAD }, base: {} }] };
   }
-  if (/^\/repos\/cgwalters-forge\/homegit\/pulls\/9\/reviews/.test(path)) return { body: approved(HEAD) };
-  if (/^\/repos\/cgwalters-forge\/bootc\/pulls\/3\/reviews/.test(path)) return { body: approved(OLD) };
-  if (/^\/repos\/cgwalters-forge\/\w+\/(pulls\/\d+\/reviews|issues\/\d+\/comments)/.test(path)) return { body: [] };
+  if (/^\/repos\/jmarrero-forge\/homegit\/pulls\/9\/reviews/.test(path)) return { body: approved(HEAD) };
+  if (/^\/repos\/jmarrero-forge\/bootc\/pulls\/3\/reviews/.test(path)) return { body: approved(OLD) };
+  if (/^\/repos\/jmarrero-forge\/\w+\/(pulls\/\d+\/reviews|issues\/\d+\/comments)/.test(path)) return { body: [] };
   // The one open question with comments: only the bot's, so unanswered.
-  if (path.startsWith("/repos/cgwalters-forge/tracker/issues/21/comments")) {
-    return { body: [{ user: { login: "cgwalters-bot" }, created_at: "2026-01-06T00:00:00Z", html_url: "https://github.com/c/1", body: "ping" }] };
+  if (path.startsWith("/repos/jmarrero-forge/tracker/issues/21/comments")) {
+    return { body: [{ user: { login: "jmarrero-bot" }, created_at: "2026-01-06T00:00:00Z", html_url: "https://github.com/c/1", body: "ping" }] };
   }
   return undefined;
 }
@@ -66,14 +66,14 @@ describe("review-queue --json", () => {
     "  item:PVTI_synthetic_question answer",
     "item:PVTI_synthetic_upstream_pr see-asks",
     "  item:PVTI_synthetic_upstream_question answer",
-    "pr:cgwalters-forge/widget#5 review",
+    "pr:jmarrero-forge/widget#5 review",
     "item:PVTI_synthetic_upstream_issue see-asks",
     "  item:PVTI_synthetic_review_ask review",
     "  item:PVTI_synthetic_chore_ask rerun",
     "item:PVTI_synthetic_redacted report-bug",
     "item:PVTI_synthetic_unrecommended_question answer",
     "item:PVTI_synthetic_open_question answer",
-    "pr:cgwalters-forge/bootc#3 review",
+    "pr:jmarrero-forge/bootc#3 review",
     "item:PVTI_synthetic_home_issue report-bug",
     "item:PVTI_synthetic_closed_question wait",
   ];
@@ -87,7 +87,7 @@ describe("review-queue --json", () => {
     { name: "infra: the bot's own", argv: ["--json", "--filter=infra"], want: ["item:PVTI_synthetic_home_issue report-bug"] },
     { name: "a bare priority", argv: ["--json", "--filter", "P0"], want: all.slice(0, 3) },
     { name: "one org and a priority", argv: ["--json", "--filter", "org:bootc-dev+P1"], want: [] },
-    { name: "org and no priority", argv: ["--filter", "org:bootc-dev+none"], want: ["pr:cgwalters-forge/bootc#3 review"] },
+    { name: "org and no priority", argv: ["--filter", "org:bootc-dev+none"], want: ["pr:jmarrero-forge/bootc#3 review"] },
   ];
   for (const c of cases) {
     it(c.name, async () => {
@@ -106,20 +106,20 @@ describe("review-queue --json", () => {
     const doc = JSON.parse((await runCli(["--json"])).stdout) as QueueJson;
     assert.equal(doc.generatedAt, NOW.toISOString());
     assert.equal(doc.filter, "all");
-    const pr = doc.entries.find((e) => e.kind === "pr" && e.where === "cgwalters-forge/bootc#3");
+    const pr = doc.entries.find((e) => e.kind === "pr" && e.where === "jmarrero-forge/bootc#3");
     assert.deepEqual(pr, {
-      key: "pr:cgwalters-forge/bootc#3",
+      key: "pr:jmarrero-forge/bootc#3",
       kind: "pr",
       title: "lib: Pushed since the approval",
-      where: "cgwalters-forge/bootc#3",
+      where: "jmarrero-forge/bootc#3",
       priority: null,
       rankPriority: null,
       org: "bootc-dev",
       since: "2026-01-02T00:00:00Z",
       settled: false,
       bug: false,
-      url: "https://github.com/cgwalters-forge/bootc/pull/3",
-      appUrl: "https://cgwalters-forge.github.io/review/#pr/cgwalters-forge/bootc/3",
+      url: "https://github.com/jmarrero-forge/bootc/pull/3",
+      appUrl: "https://jmarrero-forge.github.io/review/#pr/jmarrero-forge/bootc/3",
       verdict: { state: "approved-older", label: "approved an older head" },
       action: { verb: "review", summary: "review the commits pushed since your approval" },
       asks: [],
@@ -166,7 +166,7 @@ describe("review-queue --text", () => {
     const lines = r.stdout.split("\n");
     assert.match(lines[0] ?? "", /^2 open of 3 row\(s\) in 2 entries \(filter: all\+P0\)$/);
     assert.equal(lines[2], "== P0");
-    assert.ok(lines.some((l) => /^ {4}question +cgwalters-forge\/tracker#21 /.test(l)));
+    assert.ok(lines.some((l) => /^ {4}question +jmarrero-forge\/tracker#21 /.test(l)));
     assert.ok(lines.some((l) => /-> answer: answer the question \(the bot recommends A\)/.test(l)));
     assert.ok(lines.some((l) => /A\) .*\(recommended\)$/.test(l)));
   });
@@ -174,7 +174,7 @@ describe("review-queue --text", () => {
   it("says when nothing waits, and warns about an org nothing targets", async () => {
     const r = await runCli(["--text", "--filter", "org:nobody"]);
     assert.match(r.stdout, /Nothing waiting on you\.\n$/);
-    assert.match(r.stdout, /warning: no entry targets org nobody; the queue has bootc-dev, cgwalters-bot, example-upstream, no org, other\n/);
+    assert.match(r.stdout, /warning: no entry targets org nobody; the queue has bootc-dev, example-upstream, jmarrero-bot, no org, other\n/);
   });
 });
 
