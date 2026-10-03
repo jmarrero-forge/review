@@ -1731,7 +1731,7 @@ function signInView(reason: SignInReason): HTMLElement {
       h(
         "p",
         {},
-        "A fine-grained token acts on one resource owner only: with owner cgwalters-forge and Pull requests: read and write, Issues: read and write, and Contents and Commit statuses: read, it can review forge PRs and answer the bot's questions in cgwalters-forge/tracker. Make it mine also needs Contents: read and write, to rewrite a PR's commits. The capture bar files issues with Issues: write, and adds them to the board with the organization's Projects: read and write (on a classic token, the project scope).",
+        "A fine-grained token acts on one resource owner only: with owner jmarrero-forge and Pull requests: read and write, Issues: read and write, and Contents and Commit statuses: read, it can review forge PRs and answer the bot's questions in jmarrero-forge/tracker. Make it mine also needs Contents: read and write, to rewrite a PR's commits. The capture bar files issues with Issues: write, and adds them to the board with the organization's Projects: read and write (on a classic token, the project scope).",
       ),
       h("p", {}, "Anyone who can change this site's code could read a pasted token, so prefer one that expires soon."),
     ),

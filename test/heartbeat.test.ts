@@ -27,11 +27,11 @@ describe("findHeartbeat", () => {
       loopState: "sleeping",
       nextWakeAt: "2026-09-28T15:25:00Z",
       workers: [
-        { name: "ops-v2", itemUrl: "https://github.com/cgwalters-forge/review/pull/16", itemRef: "cgwalters-forge/review#16", startedAt: "2026-09-28T14:40:00Z", status: "testing", devspace: "selinux-3327" },
+        { name: "ops-v2", itemUrl: "https://github.com/jmarrero-forge/review/pull/16", itemRef: "jmarrero-forge/review#16", startedAt: "2026-09-28T14:40:00Z", status: "testing", devspace: "selinux-3327" },
         { name: "bootc-2482", itemUrl: "https://github.com/bootc-dev/bootc/issues/2482", itemRef: "bootc-dev/bootc#2482", startedAt: "2026-09-28T15:01:30Z", status: "starting" },
       ],
       skipped: 0,
-      commentUrl: "https://github.com/cgwalters-forge/tracker/issues/176#issuecomment-2",
+      commentUrl: "https://github.com/jmarrero-forge/tracker/issues/1#issuecomment-2",
     });
   });
   it("finds nothing among others' comments", () => assert.equal(findHeartbeat(comments().slice(0, 1)), undefined));
@@ -102,6 +102,6 @@ describe("loadHeartbeat", () => {
     assert.equal((await loadHeartbeat(gh))?.workers.length, 2);
     assert.equal((await loadHeartbeat(gh))?.workers.length, 2);
     assert.deepEqual(calls.map((c) => c.headers["If-None-Match"]), [undefined, '"0"', '"2"']);
-    assert.equal(new URL(calls[0]?.url ?? "").pathname, "/repos/cgwalters-forge/tracker/issues/176/comments");
+    assert.equal(new URL(calls[0]?.url ?? "").pathname, "/repos/jmarrero-forge/tracker/issues/1/comments");
   });
 });

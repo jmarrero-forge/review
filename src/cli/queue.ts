@@ -22,13 +22,13 @@ const GITHUB_HOST = "github.com";
 
 export const USAGE = `Usage: ${PROG} [--json | --text] [--filter FILTER]
 
-Print what is waiting on cgwalters (the review app's queue), ranked as the
+Print what is waiting on jmarrero (the review app's queue), ranked as the
 app ranks it: P0 first, then the oldest; answered asks last.
 
   --json           the ${SCHEMA} JSON document (default when stdout isn't a terminal)
   --text           a human-readable list (default on a terminal)
   --filter FILTER  the app's filter tokens: all (default); composefs, meaning all
-                   upstream work (every org but cgwalters-bot and cgwalters-forge;
+                   upstream work (every org but jmarrero-bot and jmarrero-forge;
                    use org:composefs for that org alone); infra, the bot's own
                    harness (those two orgs); org:NAME; org:none. Add +P0..+P3 or
                    +none for a priority, e.g. composefs+P0. A bare P0 means all+P0.

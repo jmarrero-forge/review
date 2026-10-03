@@ -1,5 +1,5 @@
 // Review and chore asks: the tracker issues, besides questions, through
-// which the bot asks cgwalters to do something. Pure functions over issue
+// which the bot asks jmarrero to do something. Pure functions over issue
 // bodies and REST JSON, so tests feed them synthetic payloads.
 //
 // Every ask is an open issue in the tracker, assigned to him, with one

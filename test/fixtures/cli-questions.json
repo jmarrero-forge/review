@@ -6,12 +6,12 @@
     "content": {
       "node_id": "I_synthetic_tracker_30",
       "title": "Keep the old flag?",
-      "body": "Blocks: https://github.com/cgwalters-bot/elsewhere/issues/9\nQ: Keep the old flag?\nOptions:\nA) Keep it\nB) Drop it\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/30",
+      "body": "Blocks: https://github.com/jmarrero-bot/elsewhere/issues/9\nQ: Keep the old flag?\nOptions:\nA) Keep it\nB) Drop it\n",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/30",
       "state": "open",
       "updated_at": "2026-01-13T00:00:00Z",
       "user": {
-        "login": "cgwalters-bot"
+        "login": "jmarrero-bot"
       },
       "labels": [
         {
@@ -20,7 +20,7 @@
       ],
       "assignees": [
         {
-          "login": "cgwalters"
+          "login": "jmarrero"
         }
       ],
       "comments": 0,
@@ -58,7 +58,7 @@
         "name": "Why",
         "data_type": "text",
         "value": {
-          "raw": "Question for cgwalters."
+          "raw": "Question for jmarrero."
         }
       }
     ],
@@ -72,12 +72,12 @@
     "content": {
       "node_id": "I_synthetic_tracker_31",
       "title": "What should the default be?",
-      "body": "Blocks: https://github.com/cgwalters-bot/elsewhere/issues/9\nQ: What should the default be?\n",
-      "html_url": "https://github.com/cgwalters-forge/tracker/issues/31",
+      "body": "Blocks: https://github.com/jmarrero-bot/elsewhere/issues/9\nQ: What should the default be?\n",
+      "html_url": "https://github.com/jmarrero-forge/tracker/issues/31",
       "state": "open",
       "updated_at": "2026-01-14T00:00:00Z",
       "user": {
-        "login": "cgwalters-bot"
+        "login": "jmarrero-bot"
       },
       "labels": [
         {
@@ -86,7 +86,7 @@
       ],
       "assignees": [
         {
-          "login": "cgwalters"
+          "login": "jmarrero"
         }
       ],
       "comments": 0,
@@ -124,7 +124,7 @@
         "name": "Why",
         "data_type": "text",
         "value": {
-          "raw": "Question for cgwalters."
+          "raw": "Question for jmarrero."
         }
       }
     ],

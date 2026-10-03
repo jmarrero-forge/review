@@ -32,7 +32,7 @@ import { fields, fixture, installDom, scriptedFetch } from "./helpers.ts";
 installDom();
 
 const API = "https://api.github.com";
-const REPO = `${API}/repos/bootc-dev/cgwalters-devspace-sandbox`;
+const REPO = `${API}/repos/bootc-dev/jmarrero-devspace-sandbox`;
 const NOW = Date.parse("2026-09-28T15:12:05Z");
 const MIN = 60_000;
 const HOUR = 60 * MIN;
@@ -44,10 +44,10 @@ const jobs = () => fixture<Record<string, RawJob[]>>("ops-jobs.json");
 const events = () => fixture<RawEvent[]>("ops-events.json");
 // What bin/bot-heartbeat publish wrote for a sample heartbeat, at 15:05Z.
 const heartbeat = () => fixture<unknown[]>("heartbeat-comments.json");
-const HEARTBEAT_PATH = "/repos/cgwalters-forge/tracker/issues/176/comments";
+const HEARTBEAT_PATH = "/repos/jmarrero-forge/tracker/issues/1/comments";
 // What bin/bot-heartbeat publish wrote to the private repository for the same sample, after someone else's copy.
 const usageComments = () => fixture<unknown[]>("usage-comments.json");
-const USAGE_PATH = "/repos/cgwalters-forge/bot-ops/issues/1/comments";
+const USAGE_PATH = "/repos/jmarrero-forge/bot-ops/issues/1/comments";
 
 function row(id: number): Devspace {
   const run = runs().find((r) => r.id === id);
@@ -100,8 +100,8 @@ describe("devspaceOf", () => {
     assert.deepEqual(row(36439387350), {
       id: 36439387350,
       name: "selinux-3327",
-      host: "cgwalters-devspace-36439387350",
-      url: "https://github.com/bootc-dev/cgwalters-devspace-sandbox/actions/runs/36439387350",
+      host: "jmarrero-devspace-36439387350",
+      url: "https://github.com/bootc-dev/jmarrero-devspace-sandbox/actions/runs/36439387350",
       phase: "ready",
       cores: 16,
       createdAt: "2026-09-28T14:53:31Z",
@@ -217,10 +217,10 @@ describe("workGroups", () => {
   });
   it("splits upstream from the bot's own like the queue's presets, by priority", () => {
     const groups = workGroups([
-      item("infra", "https://github.com/cgwalters-bot/cgwalters-bot/issues/11", { org: "cgwalters-bot", priority: "P1" }),
+      item("infra", "https://github.com/jmarrero-bot/jmarrero-bot/issues/11", { org: "jmarrero-bot", priority: "P1" }),
       item("upstream-p2", "https://github.com/fedora-selinux/selinux-policy/pull/3327", { priority: "P2" }),
-      item("upstream-p0", "https://github.com/cgwalters-forge/tracker/issues/160", { org: "bootc-dev", priority: "P0" }),
-      item("tracker-no-org", "https://github.com/cgwalters-forge/tracker/issues/1"),
+      item("upstream-p0", "https://github.com/jmarrero-forge/tracker/issues/160", { org: "bootc-dev", priority: "P0" }),
+      item("tracker-no-org", "https://github.com/jmarrero-forge/tracker/issues/1"),
     ]);
     assert.deepEqual(groups.map((g) => [g.scope, g.items.map((i) => i.nodeId)]), [
       ["composefs", ["upstream-p0", "upstream-p2"]],
@@ -259,7 +259,7 @@ describe("botEvents", () => {
   it("parses the real snapshot, newest first, skipping nothing it knows", () => {
     const got = botEvents(events());
     assert.equal(got.length, 14);
-    assert.deepEqual(got[0], { kind: "pr", repo: "cgwalters-bot/homegit", verb: "opened PR", target: "#31", url: "https://github.com/cgwalters-bot/homegit/pull/31", at: "2026-09-28T15:11:24Z", count: 1 });
+    assert.deepEqual(got[0], { kind: "pr", repo: "jmarrero-bot/homegit", verb: "opened PR", target: "#31", url: "https://github.com/jmarrero-bot/homegit/pull/31", at: "2026-09-28T15:11:24Z", count: 1 });
     assert.ok(got.every((e, i) => i === 0 || (got[i - 1]?.at ?? "") >= e.at));
   });
   it("folds a run of the same action on the same thing", () => {
@@ -292,11 +292,11 @@ describe("formatting", () => {
 describe("loadOps", () => {
   const raw = (status: string, org: string, n: number) => ({
     id: n, node_id: `PVTI_${n}`, content_type: "Issue",
-    content: { title: `<b>item ${n}</b>`, html_url: `https://github.com/cgwalters-forge/tracker/issues/${n}`, state: "open" },
+    content: { title: `<b>item ${n}</b>`, html_url: `https://github.com/jmarrero-forge/tracker/issues/${n}`, state: "open" },
     fields: [
       { id: 102, name: "Status", value: { name: { raw: status } } },
       { id: 105, name: "Org", value: { name: { raw: org } } },
-      { id: 106, name: "Branch", value: { raw: "https://github.com/cgwalters-forge/bootc/pull/31" } },
+      { id: 106, name: "Branch", value: { raw: "https://github.com/jmarrero-forge/bootc/pull/31" } },
     ],
   });
   const script = (agent: "missing" | "present") =>
@@ -309,8 +309,8 @@ describe("loadOps", () => {
       const job = /\/actions\/runs\/(\d+)\/jobs$/.exec(u.pathname);
       if (job?.[1]) return { body: { jobs: jobs()[job[1]] ?? [] } };
       if (u.pathname.endsWith("/projectsV2/1/fields")) return { body: fields() };
-      if (u.pathname.endsWith("/projectsV2/1/items")) return { body: [raw("In Progress", "bootc-dev", 1), raw("In Progress", "cgwalters-bot", 2), raw("Draft", "bootc-dev", 3)] };
-      if (u.pathname === "/users/cgwalters-bot/events/public") return { body: events() };
+      if (u.pathname.endsWith("/projectsV2/1/items")) return { body: [raw("In Progress", "bootc-dev", 1), raw("In Progress", "jmarrero-bot", 2), raw("Draft", "bootc-dev", 3)] };
+      if (u.pathname === "/users/jmarrero-bot/events/public") return { body: events() };
       if (u.pathname === HEARTBEAT_PATH) return { body: heartbeat() };
       if (u.pathname === USAGE_PATH) return { body: usageComments() };
       return undefined;
@@ -349,7 +349,7 @@ describe("loadOps", () => {
       const store = await IdbStore.open(factory);
       assert.ok(store);
       const cache = new ResponseCache({ now: () => NOW });
-      assert.ok(await cache.attach(store, "cgwalters", "h"));
+      assert.ok(await cache.attach(store, "jmarrero", "h"));
       const { fetchImpl, calls } = script("missing");
       return { gh: new GitHub(async () => "t", fetchImpl, cache), cache, calls };
     };
@@ -411,7 +411,7 @@ describe("loadOps", () => {
     const ops = await loadOps(gh, new Map(), NOW);
     assert.equal(ops.events, undefined);
     assert.equal(ops.warnings.length, 1);
-    assert.match(ops.warnings[0] ?? "", /cgwalters-bot's recent activity.*HTTP 500/);
+    assert.match(ops.warnings[0] ?? "", /jmarrero-bot's recent activity.*HTTP 500/);
     assert.equal(ops.agents?.deployed, true);
     assert.equal(ops.devspaces?.devspaces.length, 4);
   });
@@ -443,7 +443,7 @@ describe("opsView", () => {
     assert.equal(live.length, 1);
     const text = live[0]?.textContent ?? "";
     assert.match(text, /selinux-3327/);
-    assert.match(text, /cgwalters-devspace-36439387350/);
+    assert.match(text, /jmarrero-devspace-36439387350/);
     assert.match(text, /16c/);
     assert.match(text, /up 16m 31s/);
     // Unknown duration: counted down from the longest, from the keep step's start.
@@ -455,7 +455,7 @@ describe("opsView", () => {
 
   it("says agent.yml isn't there yet, nor a heartbeat", async () => {
     const text = (await view("missing", [])).textContent ?? "";
-    assert.match(text, /Not deployed yet: bootc-dev\/cgwalters-devspace-sandbox has no agent\.yml/);
+    assert.match(text, /Not deployed yet: bootc-dev\/jmarrero-devspace-sandbox has no agent\.yml/);
     assert.match(text, /No heartbeat published yet/);
     assert.match(text, /Nothing is In Progress/);
     assert.match((await view("present")).textContent ?? "", /No agent runs yet/);
@@ -470,8 +470,8 @@ describe("opsView", () => {
     const rows = [...sec.querySelectorAll(".lw")];
     assert.deepEqual(rows.map((r) => r.querySelector(".name strong")?.textContent), ["ops-v2", "bootc-2482"]);
     const a = rows[0]?.querySelector(".name a");
-    assert.equal(a?.getAttribute("href"), "https://github.com/cgwalters-forge/review/pull/16");
-    assert.equal(a?.textContent, "cgwalters-forge/review#16");
+    assert.equal(a?.getAttribute("href"), "https://github.com/jmarrero-forge/review/pull/16");
+    assert.equal(a?.textContent, "jmarrero-forge/review#16");
     assert.match(rows[0]?.textContent ?? "", /testing.*⌁ selinux-3327.*32m 05s/);
     assert.equal(rows[0]?.querySelector(".ds")?.getAttribute("title"), "its devspace, running (above)");
     assert.match(rows[1]?.textContent ?? "", /starting.*10m 35s/);
@@ -495,7 +495,7 @@ describe("opsView", () => {
     // The coordinator, then the workers, by tokens.
     const top = [...sec.querySelectorAll(".uc")].map((r) => [r.querySelector(".name strong")?.textContent, r.querySelector(".tok")?.textContent]);
     assert.deepEqual(top, [["coordinator", "9.2M"], ["ops-v2", "4.2M"], ["bootc-2482", "899k"]]);
-    assert.equal(sec.querySelector(".uc a")?.getAttribute("href"), "https://github.com/cgwalters-forge/review/pull/16");
+    assert.equal(sec.querySelector(".uc a")?.getAttribute("href"), "https://github.com/jmarrero-forge/review/pull/16");
     assert.match(sec.querySelector(".fine")?.textContent ?? "", /status line .* as of/);
     assert.equal(sec.querySelector(".stale"), null);
 
@@ -527,10 +527,10 @@ describe("opsView", () => {
     for (const status of [403, 404]) {
       const el = await view("missing", heartbeat(), NOW, { status, body: { message: "Not Found" } });
       assert.equal(el.querySelector(":scope > .warn"), null, `no warning on ${status}`);
-      assert.equal(usageSec(el)?.querySelector(".note")?.textContent, "Private: it's in cgwalters-forge/bot-ops, which this token can't read.");
+      assert.equal(usageSec(el)?.querySelector(".note")?.textContent, "Private: it's in jmarrero-forge/bot-ops, which this token can't read.");
       assert.ok(el.querySelector(".lw"), "the local agents still show");
     }
-    assert.equal(usageSec(await view("missing", heartbeat(), NOW, { body: usageComments().slice(0, 1) }))?.querySelector(".note")?.textContent, "No usage published to cgwalters-forge/bot-ops yet.");
+    assert.equal(usageSec(await view("missing", heartbeat(), NOW, { body: usageComments().slice(0, 1) }))?.querySelector(".note")?.textContent, "No usage published to jmarrero-forge/bot-ops yet.");
     // A rate limit is a failed read, not a private repository.
     const limited = await view("missing", heartbeat(), NOW, { status: 403, body: { message: "API rate limit exceeded for user ID 1." } });
     assert.match(limited.querySelector(":scope > .warn")?.textContent ?? "", /the plan's usage.*rate limit/);

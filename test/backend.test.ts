@@ -24,7 +24,7 @@ import { fields, rawBoardItem, rawItems, scriptedFetch } from "./helpers.ts";
 
 const token = async () => "t";
 const API = "https://api.github.com";
-const PROJECT = `${API}/orgs/cgwalters-forge/projectsV2/1`;
+const PROJECT = `${API}/orgs/jmarrero-forge/projectsV2/1`;
 
 async function queue(): Promise<Map<string, Item>> {
   const { fetchImpl } = scriptedFetch((_m, url) => {
@@ -98,27 +98,27 @@ describe("loadDecisions", () => {
     const issue = (n: number, extra: Record<string, unknown> = {}) => ({
       node_id: `I_${n}`,
       title: `D${n}: pick`,
-      body: "Blocks: https://github.com/cgwalters-forge/tracker/issues/1\nQ: x",
-      html_url: `https://github.com/cgwalters-forge/tracker/issues/${n}`,
+      body: "Blocks: https://github.com/jmarrero-forge/tracker/issues/1\nQ: x",
+      html_url: `https://github.com/jmarrero-forge/tracker/issues/${n}`,
       state: "open",
-      user: { login: "cgwalters-bot" },
+      user: { login: "jmarrero-bot" },
       labels: [{ name: "question" }, { name: "decision" }],
-      assignees: [{ login: "cgwalters" }],
+      assignees: [{ login: "jmarrero" }],
       comments: 0,
       ...extra,
     });
     const { fetchImpl, calls } = scriptedFetch((_m, url) => (url.startsWith(TRACKER) ? { body: [issue(2), issue(3, { pull_request: {} }), issue(4, { labels: [{ name: "decision" }] })] } : undefined));
     const q = await loadDecisions(new GitHub(token, fetchImpl));
     const url = new URL(calls[0]?.url ?? "");
-    assert.equal(url.pathname, "/repos/cgwalters-forge/tracker/issues");
+    assert.equal(url.pathname, "/repos/jmarrero-forge/tracker/issues");
     assert.equal(url.searchParams.get("labels"), "decision");
     assert.equal(url.searchParams.get("state"), "open");
     assert.equal(q.items.length, 1);
     const d = q.items[0] as Item;
     assert.equal(d.nodeId, "I_2");
     assert.equal(d.kind, "issue");
-    assert.deepEqual(d.ref, { owner: "cgwalters-forge", repo: "tracker", number: 2 });
-    assert.deepEqual(d.assignees, ["cgwalters"]);
+    assert.deepEqual(d.ref, { owner: "jmarrero-forge", repo: "tracker", number: 2 });
+    assert.deepEqual(d.assignees, ["jmarrero"]);
     assert.equal(itemAction(d, 0).kind, "answer");
   });
 });
@@ -134,7 +134,7 @@ describe("gistId", () => {
   for (const [url, want] of cases) it(url, () => assert.equal(gistId(url), want));
 });
 
-const TRACKER = `${API}/repos/cgwalters-forge/tracker/issues`;
+const TRACKER = `${API}/repos/jmarrero-forge/tracker/issues`;
 
 /** A raw comment by `login`, on day `day` of January. */
 function comment(login: string, day: number, body = `comment ${day}`) {
@@ -151,8 +151,8 @@ describe("loadContext", () => {
     const items = await queue();
     const home = items.get("PVTI_synthetic_home_issue") as Item;
     const { fetchImpl } = scriptedFetch((_m, url) => {
-      if (url.startsWith(`${API}/repos/cgwalters-bot/example-tool/issues/7/comments`)) {
-        return { body: Array.from({ length: 7 }, (_, i) => comment(i === 6 ? "cgwalters" : "someone", i + 1)) };
+      if (url.startsWith(`${API}/repos/jmarrero-bot/example-tool/issues/7/comments`)) {
+        return { body: Array.from({ length: 7 }, (_, i) => comment(i === 6 ? "jmarrero" : "someone", i + 1)) };
       }
       return undefined;
     });
@@ -171,8 +171,8 @@ describe("loadContext", () => {
 
   it("says whether he answered a question, from all its comments", async () => {
     const q = (await queue()).get("PVTI_synthetic_question") as Item;
-    const all = [comment("cgwalters", 1), comment("cgwalters-bot", 2), ...Array.from({ length: 6 }, (_, i) => comment("someone", i + 3))];
-    for (const [comments, want] of [[all, false], [[...all, comment("cgwalters", 20)], true]] as const) {
+    const all = [comment("jmarrero", 1), comment("jmarrero-bot", 2), ...Array.from({ length: 6 }, (_, i) => comment("someone", i + 3))];
+    for (const [comments, want] of [[all, false], [[...all, comment("jmarrero", 20)], true]] as const) {
       const { fetchImpl } = scriptedFetch((_m, url) => (url.startsWith(`${TRACKER}/21/comments`) ? { body: comments } : undefined));
       const ctx = await loadContext(new GitHub(token, fetchImpl), q);
       assert.equal(ctx.answered, want);
@@ -183,7 +183,7 @@ describe("loadContext", () => {
 
 describe("loadSubIssues", () => {
   const sub = (n: number, state: string, extra: object = {}) => ({
-    html_url: `https://github.com/cgwalters-forge/tracker/issues/${n}`,
+    html_url: `https://github.com/jmarrero-forge/tracker/issues/${n}`,
     title: `sub ${n}`,
     state,
     labels: [],
@@ -235,14 +235,14 @@ describe("loadAnswered", () => {
     const { fetchImpl, calls } = scriptedFetch((_m, url, headers) => {
       if (headers["If-None-Match"]) return { status: 304 };
       if (url.startsWith(`${TRACKER}/21/comments`)) {
-        return { body: [comment("cgwalters-bot", 1), comment("cgwalters", 2, "B")], headers: { etag: '"c21"' } };
+        return { body: [comment("jmarrero-bot", 1), comment("jmarrero", 2, "B")], headers: { etag: '"c21"' } };
       }
       return undefined;
     });
     const gh = new GitHub(token, fetchImpl);
     assert.deepEqual([...(await loadAnswered(gh, items))], ["PVTI_synthetic_question"]);
     // #22 has no comments and #23 is closed: neither is read.
-    assert.deepEqual(calls.map((c) => new URL(c.url).pathname), ["/repos/cgwalters-forge/tracker/issues/21/comments"]);
+    assert.deepEqual(calls.map((c) => new URL(c.url).pathname), ["/repos/jmarrero-forge/tracker/issues/21/comments"]);
     assert.deepEqual([...(await loadAnswered(gh, items))], ["PVTI_synthetic_question"]);
     assert.equal(calls[1]?.headers["If-None-Match"], '"c21"');
   });
@@ -252,7 +252,7 @@ describe("loadAnswered", () => {
     const many = Array.from({ length: 20 }, (_, n) => ({
       ...base,
       nodeId: `PVTI_q${n}`,
-      ref: { owner: "cgwalters-forge", repo: "tracker", number: 100 + n },
+      ref: { owner: "jmarrero-forge", repo: "tracker", number: 100 + n },
     }));
     let inFlight = 0;
     let peak = 0;
@@ -260,7 +260,7 @@ describe("loadAnswered", () => {
       peak = Math.max(peak, ++inFlight);
       await new Promise((r) => setTimeout(r, 1));
       inFlight--;
-      return new Response(JSON.stringify([comment("cgwalters", 1)]), { status: 200 });
+      return new Response(JSON.stringify([comment("jmarrero", 1)]), { status: 200 });
     });
     assert.equal((await loadAnswered(gh, many)).size, 20);
     assert.equal(peak, FETCH_CONCURRENCY);
@@ -274,16 +274,16 @@ describe("loadAnswered", () => {
 });
 
 describe("postAnswer", () => {
-  const ref = { owner: "cgwalters-forge", repo: "tracker", number: 21 };
+  const ref = { owner: "jmarrero-forge", repo: "tracker", number: 21 };
   const openQuestion = {
-    html_url: "https://github.com/cgwalters-forge/tracker/issues/21",
+    html_url: "https://github.com/jmarrero-forge/tracker/issues/21",
     state: "open",
     labels: [{ name: "question" }],
-    assignees: [{ login: "cgwalters" }],
-    user: { login: "cgwalters-bot" },
-    body: "Blocks: https://github.com/cgwalters-forge/tracker/issues/20\nQ: which?\nOptions:\nA) x\nB) y\nRecommended: A",
+    assignees: [{ login: "jmarrero" }],
+    user: { login: "jmarrero-bot" },
+    body: "Blocks: https://github.com/jmarrero-forge/tracker/issues/20\nQ: which?\nOptions:\nA) x\nB) y\nRecommended: A",
   };
-  const commentUrl = "https://github.com/cgwalters-forge/tracker/issues/21#issuecomment-1";
+  const commentUrl = "https://github.com/jmarrero-forge/tracker/issues/21#issuecomment-1";
 
   function github(issue: unknown) {
     return scriptedFetch((method, url) => {
@@ -312,7 +312,7 @@ describe("postAnswer", () => {
     ["a closed question", { ...openQuestion, state: "closed" }, /is closed/],
     ["an issue without the label", { ...openQuestion, labels: [] }, /not labelled "question"/],
     ["a PR", { ...openQuestion, pull_request: {} }, /not an issue/],
-    ["an issue not assigned to him", { ...openQuestion, assignees: [{ login: "cgwalters-bot" }] }, /not assigned to cgwalters/],
+    ["an issue not assigned to him", { ...openQuestion, assignees: [{ login: "jmarrero-bot" }] }, /not assigned to jmarrero/],
     ["a letter when the options are gone", { ...openQuestion, body: "Q: just do it" }, /has no option A; it no longer offers options\. Reload it\./],
     ["a transferred issue", { ...openQuestion, html_url: "https://github.com/example-upstream/widget/issues/3" }, /is now https:\/\/github\.com\/example-upstream/],
   ];
@@ -328,7 +328,7 @@ describe("postAnswer", () => {
     const { fetchImpl, calls } = github(openQuestion);
     await assert.rejects(
       postAnswer(new GitHub(token, fetchImpl), ref, { choice: "C", text: "" }),
-      /cgwalters-forge\/tracker#21 has no option C; it now offers A, B\. Reload it\./,
+      /jmarrero-forge\/tracker#21 has no option C; it now offers A, B\. Reload it\./,
     );
     assert.deepEqual(calls.map((c) => c.method), ["GET"]);
   });
@@ -343,17 +343,17 @@ describe("postAnswer", () => {
   });
 
   it("answers in another repository when told to, as the sandbox check does", async () => {
-    const sandbox = { owner: "cgwalters-bot", repo: "review-sandbox", number: 4 };
-    const base = `${API}/repos/cgwalters-bot/review-sandbox/issues/4`;
+    const sandbox = { owner: "jmarrero-bot", repo: "review-sandbox", number: 4 };
+    const base = `${API}/repos/jmarrero-bot/review-sandbox/issues/4`;
     const { fetchImpl, calls } = scriptedFetch((method, url) => {
       if (method === "GET" && url === base) {
         return {
           body: {
-            html_url: "https://github.com/cgwalters-bot/review-sandbox/issues/4",
+            html_url: "https://github.com/jmarrero-bot/review-sandbox/issues/4",
             state: "open",
             labels: [{ name: "question" }],
-            assignees: [{ login: "cgwalters-bot" }],
-            user: { login: "cgwalters-bot" },
+            assignees: [{ login: "jmarrero-bot" }],
+            user: { login: "jmarrero-bot" },
             body: "Q: ok?\nOptions:\nA) yes\nB) no",
           },
         };
@@ -362,8 +362,8 @@ describe("postAnswer", () => {
       return undefined;
     });
     const gh = new GitHub(token, fetchImpl);
-    await assert.rejects(postAnswer(gh, sandbox, { choice: "A", text: "" }), /not in cgwalters-forge\/tracker/);
-    await postAnswer(gh, sandbox, { choice: "A", text: "" }, { repo: "cgwalters-bot/review-sandbox", assignee: "cgwalters-bot", author: "cgwalters-bot" });
+    await assert.rejects(postAnswer(gh, sandbox, { choice: "A", text: "" }), /not in jmarrero-forge\/tracker/);
+    await postAnswer(gh, sandbox, { choice: "A", text: "" }, { repo: "jmarrero-bot/review-sandbox", assignee: "jmarrero-bot", author: "jmarrero-bot" });
     assert.deepEqual(calls.at(-1)?.body, { body: "A\n" });
   });
 
@@ -383,13 +383,13 @@ describe("postAnswer", () => {
 
 const RUN = "https://github.com/example-upstream/widget/actions/runs/777";
 const RUN_API = `${API}/repos/example-upstream/widget/actions/runs/777`;
-const CHORE = { owner: "cgwalters-forge", repo: "tracker", number: 25 };
+const CHORE = { owner: "jmarrero-forge", repo: "tracker", number: 25 };
 const chore = {
-  html_url: "https://github.com/cgwalters-forge/tracker/issues/25",
+  html_url: "https://github.com/jmarrero-forge/tracker/issues/25",
   state: "open",
   labels: [{ name: "chore" }],
-  assignees: [{ login: "cgwalters" }],
-  user: { login: "cgwalters-bot" },
+  assignees: [{ login: "jmarrero" }],
+  user: { login: "jmarrero-bot" },
   body: `Blocks: \`https://github.com/example-upstream/widget/issues/7\`\nAsk: Rerun the arm legs\nRerun: \`${RUN}\`\n`,
 };
 const failedRun = {
@@ -435,7 +435,7 @@ describe("postAskComment", () => {
     ["a command line", "ok\n/promote", chore, /bot command/],
     ["an empty comment", " ", chore, /write a comment/],
     ["a chore as a review", "done", { ...chore, labels: [{ name: "review" }] }, /not labelled "chore"/],
-    ["a chore someone else opened", "done", { ...chore, user: { login: "someone" } }, /not opened by cgwalters-bot/],
+    ["a chore someone else opened", "done", { ...chore, user: { login: "someone" } }, /not opened by jmarrero-bot/],
     ["a closed chore", "done", { ...chore, state: "closed" }, /is closed/],
   ];
   for (const [name, text, issue, want] of refusals) {
@@ -503,11 +503,11 @@ describe("rerunFailedJobs", () => {
     assert.deepEqual(
       calls.map((c) => `${c.method} ${c.url.replace(API, "")}`),
       [
-        "GET /repos/cgwalters-forge/tracker/issues/25",
+        "GET /repos/jmarrero-forge/tracker/issues/25",
         "GET /repos/example-upstream/widget/actions/runs/777",
         "GET /repos/example-upstream/widget/actions/runs/777/jobs?filter=latest&per_page=100",
         "POST /repos/example-upstream/widget/actions/runs/777/rerun-failed-jobs",
-        "POST /repos/cgwalters-forge/tracker/issues/25/comments",
+        "POST /repos/jmarrero-forge/tracker/issues/25/comments",
       ],
     );
     assert.deepEqual(calls.at(-1)?.body, { body: `Reran the failed jobs of ${RUN}\n` });
@@ -520,8 +520,8 @@ describe("rerunFailedJobs", () => {
     ["a run in another repository, same id", "https://github.com/evil/widget/actions/runs/777", {}, /doesn't ask to rerun/],
     ["a chore with an unreadable Rerun: line", RUN, { issue: { ...chore, body: `Ask: x\nRerun: \`${RUN}\`\nRerun: \`${RUN}/attempts/2\`` } }, /can't read "Rerun:/],
     ["a review ask", RUN, { issue: { ...chore, labels: [{ name: "review" }] } }, /not labelled "chore"/],
-    ["a chore not assigned to him", RUN, { issue: { ...chore, assignees: [] } }, /not assigned to cgwalters/],
-    ["a chore someone else opened", RUN, { issue: { ...chore, user: { login: "someone" } } }, /not opened by cgwalters-bot/],
+    ["a chore not assigned to him", RUN, { issue: { ...chore, assignees: [] } }, /not assigned to jmarrero/],
+    ["a chore someone else opened", RUN, { issue: { ...chore, user: { login: "someone" } } }, /not opened by jmarrero-bot/],
     ["a closed chore", RUN, { issue: { ...chore, state: "closed" } }, /is closed/],
     ["a running run", RUN, { run: { ...failedRun, status: "in_progress", conclusion: null } }, /not completed/],
     ["a successful run", RUN, { run: { ...failedRun, conclusion: "success" } }, /ended success/],
@@ -560,20 +560,20 @@ describe("rerunFailedJobs", () => {
     const base = rerunGitHub();
     const fetchImpl = async (url: string, init?: RequestInit) =>
       init?.method === "POST" && url.endsWith("/comments") ? new Response(JSON.stringify({ message: "nope" }), { status: 403 }) : base.fetchImpl(url, init);
-    await assert.rejects(rerunFailedJobs(new GitHub(token, fetchImpl), CHORE, RUN), /reran the failed jobs of .*runs\/777, but couldn't say so on cgwalters-forge\/tracker#25.*Comment there yourself/);
+    await assert.rejects(rerunFailedJobs(new GitHub(token, fetchImpl), CHORE, RUN), /reran the failed jobs of .*runs\/777, but couldn't say so on jmarrero-forge\/tracker#25.*Comment there yourself/);
   });
 });
 
 describe("submitAskedReview", () => {
-  const ASK = { owner: "cgwalters-forge", repo: "tracker", number: 24 };
+  const ASK = { owner: "jmarrero-forge", repo: "tracker", number: 24 };
   const PR = { owner: "example-upstream", repo: "widget", number: 50 };
   const HEAD = "a".repeat(40);
   const review = {
-    html_url: "https://github.com/cgwalters-forge/tracker/issues/24",
+    html_url: "https://github.com/jmarrero-forge/tracker/issues/24",
     state: "open",
     labels: [{ name: "review" }],
-    assignees: [{ login: "cgwalters" }],
-    user: { login: "cgwalters-bot" },
+    assignees: [{ login: "jmarrero" }],
+    user: { login: "jmarrero-bot" },
     body: `Blocks: \`https://github.com/example-upstream/widget/issues/7\`\nAsk: Re-approve\nReview: \`https://github.com/example-upstream/widget/pull/50\` at ${HEAD}\n`,
   };
   const pull = { html_url: "https://github.com/example-upstream/widget/pull/50", state: "open", head: { sha: HEAD }, base: {} };
@@ -592,7 +592,7 @@ describe("submitAskedReview", () => {
     const { fetchImpl, calls } = github(review);
     assert.equal(await submitAskedReview(new GitHub(token, fetchImpl), ASK, PR, HEAD, approve), `${pull.html_url}#r1`);
     assert.deepEqual(calls.map((c) => `${c.method} ${c.url.replace(API, "")}`), [
-      "GET /repos/cgwalters-forge/tracker/issues/24",
+      "GET /repos/jmarrero-forge/tracker/issues/24",
       "GET /repos/example-upstream/widget/pulls/50",
       "POST /repos/example-upstream/widget/pulls/50/reviews",
     ]);
@@ -600,7 +600,7 @@ describe("submitAskedReview", () => {
 
   const refusals: [string, unknown, RegExp][] = [
     ["an ask closed since the pane rendered", { ...review, state: "closed" }, /not reviewing: .*#24 is closed/],
-    ["an ask no longer assigned to him", { ...review, assignees: [] }, /not assigned to cgwalters/],
+    ["an ask no longer assigned to him", { ...review, assignees: [] }, /not assigned to jmarrero/],
     ["an ask relabelled as a chore", { ...review, labels: [{ name: "chore" }] }, /not labelled "review"/],
     ["an ask that no longer names this PR", { ...review, body: `Ask: x\nReview: \`https://github.com/example-upstream/widget/pull/51\` at ${HEAD}` }, /no longer asks for a review of example-upstream\/widget#50/],
     ["an ask that now names another head", { ...review, body: `Ask: x\nReview: \`https://github.com/example-upstream/widget/pull/50\` at ${"b".repeat(40)}` }, /now asks about bbbbbbbbbbbb, not the aaaaaaaaaaaa shown/],
@@ -622,7 +622,7 @@ describe("rerunPrRun", () => {
   /** The chore's GitHub, plus the PR at `head` (the failed run's by default). */
   const prGitHub = (over: Parameters<typeof rerunGitHub>[0] & { pull?: unknown } = {}) => {
     const base = rerunGitHub(over);
-    const pull = over.pull ?? { state: "open", head: { sha: "1".repeat(40) }, user: { login: "cgwalters-bot" } };
+    const pull = over.pull ?? { state: "open", head: { sha: "1".repeat(40) }, user: { login: "jmarrero-bot" } };
     const fetchImpl = async (url: string, init?: RequestInit) =>
       (init?.method ?? "GET") === "GET" && url === PULL_API ? new Response(JSON.stringify(pull), { status: 200 }) : base.fetchImpl(url, init);
     return { fetchImpl, calls: base.calls };
@@ -645,9 +645,9 @@ describe("rerunPrRun", () => {
     ["a URL that isn't a run", `${RUN}/job/2`, allowed, {}, /not a workflow run URL/],
     ["a run the queue didn't find for the PR", "https://github.com/example-upstream/widget/actions/runs/778", allowed, {}, /isn't a failed required check/],
     ["a run in another repository", "https://github.com/evil/widget/actions/runs/777", [{ url: "https://github.com/evil/widget/actions/runs/777", owner: "evil", repo: "widget", id: "777" }], {}, /not in example-upstream\/widget/],
-    ["a closed PR", RUN, allowed, { pull: { state: "closed", head: { sha: "1".repeat(40) }, user: { login: "cgwalters-bot" } } }, /is closed/],
-    ["someone else's PR", RUN, allowed, { pull: { state: "open", head: { sha: "1".repeat(40) }, user: { login: "someone" } } }, /is not cgwalters-bot's/],
-    ["a run on an older head", RUN, allowed, { pull: { state: "open", head: { sha: "2".repeat(40) } , user: { login: "cgwalters-bot" } } }, /ran on 111111111111.*now at 222222222222/],
+    ["a closed PR", RUN, allowed, { pull: { state: "closed", head: { sha: "1".repeat(40) }, user: { login: "jmarrero-bot" } } }, /is closed/],
+    ["someone else's PR", RUN, allowed, { pull: { state: "open", head: { sha: "1".repeat(40) }, user: { login: "someone" } } }, /is not jmarrero-bot's/],
+    ["a run on an older head", RUN, allowed, { pull: { state: "open", head: { sha: "2".repeat(40) } , user: { login: "jmarrero-bot" } } }, /ran on 111111111111.*now at 222222222222/],
     ["a successful run", RUN, allowed, { run: { ...failedRun, conclusion: "success" } }, /ended success/],
   ];
   for (const [name, url, ok, over, want] of refusals) {

@@ -60,7 +60,7 @@ export function rawBoardItem(n: number, fields: Record<string, string>, title = 
     id: n,
     node_id: `PVTI_t${n}`,
     content_type: "Issue",
-    content: { title, html_url: `https://github.com/cgwalters-forge/tracker/issues/${n}`, state: "open" },
+    content: { title, html_url: `https://github.com/jmarrero-forge/tracker/issues/${n}`, state: "open" },
     fields: Object.entries(fields).map(([name, v], i) =>
       TEXT_FIELDS.includes(name)
         ? { id: 200 + i, name, data_type: "text", value: { raw: v } }

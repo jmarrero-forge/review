@@ -30,25 +30,25 @@ function freshStorage(): Map<string, string> {
 
 function detail(over: Partial<PrDetail> = {}): PrDetail {
   return {
-    ref: { owner: "cgwalters-forge", repo: "widget", number: 7 },
-    url: "https://github.com/cgwalters-forge/widget/pull/7",
+    ref: { owner: "jmarrero-forge", repo: "widget", number: 7 },
+    url: "https://github.com/jmarrero-forge/widget/pull/7",
     updatedAt: "2026-09-01T10:00:00Z",
     title: `widget: ${EVIL}`,
-    body: `Why ${EVIL}\n\nGenerated-by: https://github.com/cgwalters/#llms\n\n${META}`,
-    author: "cgwalters-bot",
+    body: `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero/#llms\n\n${META}`,
+    author: "jmarrero-bot",
     state: "open",
     draft: true,
     head: HEAD,
     headRef: "bot/fix",
-    headRepo: "cgwalters-forge/widget",
+    headRepo: "jmarrero-forge/widget",
     parent: "up/widget",
     additions: 1,
     deletions: 0,
     changedFiles: 1,
     commitCount: 2,
     commits: [
-      { sha: C1, parent: "0".repeat(40), url: "https://github.com/c", message: `first ${EVIL}\n\nGenerated-by: AI`, author: "cgwalters-bot" },
-      { sha: HEAD, parent: C1, url: "https://github.com/c", message: "second\n\nGenerated-by: AI", author: "cgwalters-bot" },
+      { sha: C1, parent: "0".repeat(40), url: "https://github.com/c", message: `first ${EVIL}\n\nGenerated-by: AI`, author: "jmarrero-bot" },
+      { sha: HEAD, parent: C1, url: "https://github.com/c", message: "second\n\nGenerated-by: AI", author: "jmarrero-bot" },
     ],
     files: [],
     checks: [],
@@ -69,7 +69,7 @@ interface Saved {
 
 function hooks(saved: Saved[], over: Partial<MineHooks> = {}): MineHooks {
   return {
-    login: "cgwalters",
+    login: "jmarrero",
     scopes: () => "public_repo",
     unseen: () => " Not seen here: 1 file never expanded (a.rs).",
     save: async (edit, committer, { promote, ownText }, progress) => {
@@ -105,10 +105,10 @@ describe("mineSection", () => {
     const el = mount(detail(), hooks([]));
     assert.equal(el.querySelectorAll("img, script").length, 0);
     assert.equal(field<HTMLInputElement>(el, ".mine-title").value, `widget: ${EVIL}`);
-    assert.equal(field<HTMLTextAreaElement>(el, ".mine-body").value, `Why ${EVIL}\n\nGenerated-by: https://github.com/cgwalters/#llms`);
+    assert.equal(field<HTMLTextAreaElement>(el, ".mine-body").value, `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero/#llms`);
     assert.deepEqual([...el.querySelectorAll<HTMLTextAreaElement>(".mine-msg")].map((t) => t.value), [`first ${EVIL}\n\nGenerated-by: AI`, "second\n\nGenerated-by: AI"]);
-    assert.equal(field<HTMLInputElement>(el, ".mine-name").value, "Colin Walters");
-    assert.equal(field<HTMLInputElement>(el, ".mine-email").value, "walters@verbum.org");
+    assert.equal(field<HTMLInputElement>(el, ".mine-name").value, "Joseph Marrero Corchado");
+    assert.equal(field<HTMLInputElement>(el, ".mine-email").value, "jmarrero@redhat.com");
     assert.equal(field<HTMLInputElement>(el, "#mine-own").checked, false);
   });
 
@@ -165,11 +165,11 @@ describe("mineSection", () => {
     const confirm = field<HTMLElement>(el, ".mine-confirm");
     assert.equal(confirm.hidden, false);
     assert.deepEqual([...confirm.querySelectorAll(".d-add")].map((s) => s.textContent), ["+ widget: Mine", "+ My why.", "+ my commit 0", "+ my commit 1"]);
-    assert.match(confirm.textContent ?? "", /committer Colin Walters <walters@verbum.org>.*from eeeeeeeeee.*\/promote --human-text/s);
+    assert.match(confirm.textContent ?? "", /committer Joseph Marrero Corchado <jmarrero@redhat.com>.*from eeeeeeeeee.*\/promote --human-text/s);
     // He approved this head: no approval warning.
     assert.equal(confirm.querySelectorAll(".warn").length, 0);
     assert.equal(confirm.querySelectorAll("img").length, 0);
-    buttonNamed(el, /Push as cgwalters/).click();
+    buttonNamed(el, /Push as jmarrero/).click();
     await tick();
     assert.equal(saved.length, 1);
     assert.equal(saved[0]?.edit.title, "widget: Mine");
@@ -177,7 +177,7 @@ describe("mineSection", () => {
     assert.deepEqual([saved[0]?.promote, saved[0]?.ownText], [true, true]);
     assert.match(field(el, ".status").textContent ?? "", /is now ffffffffff.*posted/);
     // Remembered for next time.
-    assert.deepEqual(JSON.parse(mem.get("review.committer") ?? "null"), { name: "Colin Walters", email: "walters@verbum.org" });
+    assert.deepEqual(JSON.parse(mem.get("review.committer") ?? "null"), { name: "Joseph Marrero Corchado", email: "jmarrero@redhat.com" });
   });
 
   it("warns, as Approve does, when promoting a head he hasn't approved", () => {
@@ -203,12 +203,12 @@ describe("mineSection", () => {
 describe("confirmNotes", () => {
   it("warns about an unapproved head, another login, and workflow files", () => {
     const d = detail({ files: [{ filename: ".github/workflows/ci.yml", status: "modified", additions: 1, deletions: 0 }] });
-    const notes = confirmNotes(d, "cgwalters-bot", true, " Not seen here: x.").join("\n");
+    const notes = confirmNotes(d, "jmarrero-bot", true, " Not seen here: x.").join("\n");
     assert.match(notes, /haven't approved.* Not seen here: x\./);
-    assert.match(notes, /signed in as cgwalters-bot/);
+    assert.match(notes, /signed in as jmarrero-bot/);
     assert.match(notes, /workflow scope/);
-    assert.deepEqual(confirmNotes(detail(), "cgwalters", false, ""), []);
-    assert.deepEqual(confirmNotes(detail({ verdict: APPROVED }), "cgwalters", true, ""), []);
+    assert.deepEqual(confirmNotes(detail(), "jmarrero", false, ""), []);
+    assert.deepEqual(confirmNotes(detail({ verdict: APPROVED }), "jmarrero", true, ""), []);
   });
 });
 

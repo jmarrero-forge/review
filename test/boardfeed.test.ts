@@ -28,7 +28,7 @@ function item(n: number, over: Partial<Item> = {}): Item {
     nodeId: `PVTI_${n}`,
     kind: "issue",
     title: `item ${n}`,
-    url: `https://github.com/cgwalters-forge/tracker/issues/${n}`,
+    url: `https://github.com/jmarrero-forge/tracker/issues/${n}`,
     body: "",
     why: "",
     labels: [],

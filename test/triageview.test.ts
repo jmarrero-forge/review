@@ -24,7 +24,7 @@ const text = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g
 describe("triageView", () => {
   const items: Item[] = [
     item(1, { Status: "Needs human", Priority: "P0", Theme: "composefs-stable", Verdict: "keep" }, EVIL),
-    item(2, { Status: "Todo", Priority: "P1", Theme: "composefs-stable", Verdict: "merge", "Verdict target": "https://github.com/cgwalters-forge/tracker/issues/33" }),
+    item(2, { Status: "Todo", Priority: "P1", Theme: "composefs-stable", Verdict: "merge", "Verdict target": "https://github.com/jmarrero-forge/tracker/issues/33" }),
     item(3, { Status: "Todo", Priority: "P2", Theme: "harness", Verdict: "close", "Verdict target": "javascript:alert(1)" }),
     item(4, { Status: "Todo" }),
   ];
@@ -52,7 +52,7 @@ describe("triageView", () => {
     const view = triageView({ items, missing: [] }, "all", hooks());
     const rows = [...view.querySelectorAll(".themes .tri-item")];
     assert.equal(text(rows[1]?.querySelector(".verdict")), "merge");
-    assert.equal(rows[1]?.querySelector(".tri-meta .tag a")?.getAttribute("href"), "https://github.com/cgwalters-forge/tracker/issues/33");
+    assert.equal(rows[1]?.querySelector(".tri-meta .tag a")?.getAttribute("href"), "https://github.com/jmarrero-forge/tracker/issues/33");
     assert.match(text(rows[1]), /→ tracker#33/);
     assert.equal(rows[2]?.querySelector(".tri-meta .tag a"), null);
   });
@@ -84,10 +84,10 @@ describe("triageView", () => {
 
 describe("decisionsView", () => {
   const body = [
-    "Blocks: https://github.com/cgwalters-forge/tracker/issues/1",
+    "Blocks: https://github.com/jmarrero-forge/tracker/issues/1",
     "",
     "Unblocks:",
-    "- https://github.com/cgwalters-forge/bootc/pull/15",
+    "- https://github.com/jmarrero-forge/bootc/pull/15",
     "- https://github.com/bootc-dev/bootc/pull/2516",
     "",
     `Q: Promote it now? ${EVIL}`,
@@ -104,14 +104,14 @@ describe("decisionsView", () => {
       nodeId: `I_${n}`,
       body,
       labels: ["question", "decision"],
-      assignees: ["cgwalters"],
-      author: "cgwalters-bot",
+      assignees: ["jmarrero"],
+      author: "jmarrero-bot",
     }),
   );
 
   it("offers each decision's options to him, recommended marked, with unblocks", async () => {
     const sent: [string, unknown][] = [];
-    const view = decisionsView(decisions, { login: "cgwalters", answered: new Set(["I_8"]), send: async (d, a) => (sent.push([d.item.nodeId, a]), "https://github.com/c/1") }, render);
+    const view = decisionsView(decisions, { login: "jmarrero", answered: new Set(["I_8"]), send: async (d, a) => (sent.push([d.item.nodeId, a]), "https://github.com/c/1") }, render);
     assert.equal(view.querySelector("script, img"), null);
     const cards = [...view.querySelectorAll(".decision")];
     assert.deepEqual(cards.map((c) => text(c.querySelector(".dec-id"))), ["D1", "D2"]);
@@ -132,6 +132,6 @@ describe("decisionsView", () => {
   it("offers no form to anyone else", () => {
     const view = decisionsView(decisions, { login: "someone", answered: new Set(), send: async () => "" }, render);
     assert.equal(view.querySelector("form"), null);
-    assert.match(text(view), /Only cgwalters answers decisions/);
+    assert.match(text(view), /Only jmarrero answers decisions/);
   });
 });

@@ -64,8 +64,8 @@ describe("parseIssueUrl", () => {
 
 describe("parseApiIssueUrl", () => {
   const cases: [string, ReturnType<typeof parseApiIssueUrl>][] = [
-    ["https://api.github.com/repos/cgwalters-forge/tracker/issues/20", { owner: "cgwalters-forge", repo: "tracker", number: 20 }],
-    ["https://github.com/cgwalters-forge/tracker/issues/20", undefined],
+    ["https://api.github.com/repos/jmarrero-forge/tracker/issues/20", { owner: "jmarrero-forge", repo: "tracker", number: 20 }],
+    ["https://github.com/jmarrero-forge/tracker/issues/20", undefined],
     ["https://api.github.com/repos/o/r/pulls/2", undefined],
   ];
   for (const [url, want] of cases) it(url, () => assert.deepEqual(parseApiIssueUrl(url), want));
@@ -73,7 +73,7 @@ describe("parseApiIssueUrl", () => {
 
 describe("assigneeLogins", () => {
   it("takes logins, skipping empty ones", () => {
-    assert.deepEqual(assigneeLogins([{ login: "cgwalters" }, null, {}]), ["cgwalters"]);
+    assert.deepEqual(assigneeLogins([{ login: "jmarrero" }, null, {}]), ["jmarrero"]);
     assert.deepEqual(assigneeLogins(null), []);
   });
 });
@@ -126,14 +126,14 @@ describe("queueItems", () => {
     const d = byId.get("PVTI_synthetic_draft");
     assert.equal(d?.kind, "draft");
     assert.equal(d?.url, undefined);
-    assert.deepEqual(d?.gist, ["https://gist.github.com/cgwalters-bot/0123abcd"]);
+    assert.deepEqual(d?.gist, ["https://gist.github.com/jmarrero-bot/0123abcd"]);
   });
 
   it("parses a tracker question and its parent", () => {
     const q = byId.get("PVTI_synthetic_question");
     assert.deepEqual(q?.labels, ["question"]);
     assert.equal(q?.comments, 2);
-    assert.deepEqual(q?.parent, { owner: "cgwalters-forge", repo: "tracker", number: 20 });
+    assert.deepEqual(q?.parent, { owner: "jmarrero-forge", repo: "tracker", number: 20 });
     assert.equal(q?.subIssues, undefined);
     assert.deepEqual(byId.get("PVTI_synthetic_epic")?.subIssues, { total: 3, completed: 1, percent_completed: 33 });
   });
@@ -161,7 +161,7 @@ describe("questions", () => {
   });
 
   it("an ask has exactly one ask label, and is in the tracker", () => {
-    const ref = { owner: "cgwalters-forge", repo: "tracker", number: 1 };
+    const ref = { owner: "jmarrero-forge", repo: "tracker", number: 1 };
     const kind = (labels: string[], over: Partial<AskFacts> = {}) => askKind({ kind: "issue", ref, labels, ...over });
     assert.equal(kind(["chore", "infra"]), "chore");
     assert.equal(kind(["review"]), "review");
@@ -171,26 +171,26 @@ describe("questions", () => {
     assert.equal(kind(["question"], { kind: "pr" }), undefined);
   });
 
-  const tracker = { owner: "cgwalters-forge", repo: "tracker", number: 21 };
-  const open: AskFacts = { kind: "issue", ref: tracker, state: "open", labels: ["question"], assignees: ["someone", "cgwalters"], author: "cgwalters-bot" };
-  const sandbox: AskScope = { repo: "cgwalters-bot/review-sandbox", assignee: "cgwalters-bot", author: "cgwalters-bot" };
-  const inSandbox: AskFacts = { ...open, ref: { owner: "cgwalters-bot", repo: "review-sandbox", number: 4 }, assignees: ["cgwalters-bot"] };
+  const tracker = { owner: "jmarrero-forge", repo: "tracker", number: 21 };
+  const open: AskFacts = { kind: "issue", ref: tracker, state: "open", labels: ["question"], assignees: ["someone", "jmarrero"], author: "jmarrero-bot" };
+  const sandbox: AskScope = { repo: "jmarrero-bot/review-sandbox", assignee: "jmarrero-bot", author: "jmarrero-bot" };
+  const inSandbox: AskFacts = { ...open, ref: { owner: "jmarrero-bot", repo: "review-sandbox", number: 4 }, assignees: ["jmarrero-bot"] };
   const problems: [string, AskFacts, AskScope | undefined, RegExp | undefined][] = [
     ["an open question", open, undefined, undefined],
-    ["not opened by the bot", { ...open, author: "someone" }, undefined, /not opened by cgwalters-bot/],
-    ["with no known author", { kind: "issue", ref: tracker, state: "open", labels: ["question"], assignees: ["cgwalters"] }, undefined, /not opened by cgwalters-bot/],
+    ["not opened by the bot", { ...open, author: "someone" }, undefined, /not opened by jmarrero-bot/],
+    ["with no known author", { kind: "issue", ref: tracker, state: "open", labels: ["question"], assignees: ["jmarrero"] }, undefined, /not opened by jmarrero-bot/],
     ["another ask label as well", { ...open, labels: ["question", "chore"] }, undefined, /several of the labels "question", "chore"/],
-    ["any case of the repository name", { ...open, ref: { ...tracker, owner: "CGWalters-Forge" } }, undefined, undefined],
-    ["not assigned to him", { ...open, assignees: ["cgwalters-bot"] }, undefined, /not assigned to cgwalters$/],
-    ["assigned to nobody", { ...open, assignees: [] }, undefined, /not assigned to cgwalters$/],
+    ["any case of the repository name", { ...open, ref: { ...tracker, owner: "JMarrero-Forge" } }, undefined, undefined],
+    ["not assigned to him", { ...open, assignees: ["jmarrero-bot"] }, undefined, /not assigned to jmarrero$/],
+    ["assigned to nobody", { ...open, assignees: [] }, undefined, /not assigned to jmarrero$/],
     ["no issue", { kind: "draft", labels: [], assignees: [] }, undefined, /no issue/],
     ["a PR", { ...open, kind: "pr" }, undefined, /is not an issue/],
-    ["an upstream issue", { ...open, ref: { owner: "example-upstream", repo: "widget", number: 1 } }, undefined, /not in cgwalters-forge\/tracker/],
+    ["an upstream issue", { ...open, ref: { owner: "example-upstream", repo: "widget", number: 1 } }, undefined, /not in jmarrero-forge\/tracker/],
     ["no label", { ...open, labels: ["bug"] }, undefined, /not labelled "question"/],
     ["closed", { ...open, state: "closed" }, undefined, /is closed/],
     ["the sandbox, overridden", inSandbox, sandbox, undefined],
-    ["the sandbox, assigned to him only", { ...inSandbox, assignees: ["cgwalters"] }, sandbox, /not assigned to cgwalters-bot/],
-    ["the tracker, when overridden", open, sandbox, /not in cgwalters-bot\/review-sandbox/],
+    ["the sandbox, assigned to him only", { ...inSandbox, assignees: ["jmarrero"] }, sandbox, /not assigned to jmarrero-bot/],
+    ["the tracker, when overridden", open, sandbox, /not in jmarrero-bot\/review-sandbox/],
   ];
   for (const [name, facts, scope, want] of problems) {
     it(`questionProblem: ${name}`, () => {
@@ -224,10 +224,10 @@ describe("questions", () => {
 
   it("block their parent, else their Blocks: item", () => {
     const blocked = (id: string) => blockedBy(get(id));
-    assert.deepEqual(blocked("PVTI_synthetic_question"), { owner: "cgwalters-forge", repo: "tracker", number: 20 });
+    assert.deepEqual(blocked("PVTI_synthetic_question"), { owner: "jmarrero-forge", repo: "tracker", number: 20 });
     assert.deepEqual(blocked("PVTI_synthetic_upstream_question"), { owner: "example-upstream", repo: "widget", number: 42 });
     assert.deepEqual(blockedBy({ ...get("PVTI_synthetic_question"), body: "Blocks: https://github.com/o/r/issues/9" }), {
-      owner: "cgwalters-forge",
+      owner: "jmarrero-forge",
       repo: "tracker",
       number: 20,
     });
@@ -243,12 +243,12 @@ describe("answeredPending", () => {
   const c = (author: string): CommentFacts => ({ author, createdAt: "2026-01-01T00:00:00Z" });
   const cases: [string, CommentFacts[], boolean][] = [
     ["no comments", [], false],
-    ["only the bot", [c("cgwalters-bot")], false],
-    ["his answer", [c("cgwalters")], true],
-    ["his answer after the bot's", [c("cgwalters-bot"), c("someone"), c("cgwalters")], true],
-    ["the bot replied since", [c("cgwalters"), c("cgwalters-bot")], false],
-    ["someone else is not him", [c("cgwalters-bot"), c("someone")], false],
-    ["answered again after a follow-up", [c("cgwalters"), c("cgwalters-bot"), c("cgwalters")], true],
+    ["only the bot", [c("jmarrero-bot")], false],
+    ["his answer", [c("jmarrero")], true],
+    ["his answer after the bot's", [c("jmarrero-bot"), c("someone"), c("jmarrero")], true],
+    ["the bot replied since", [c("jmarrero"), c("jmarrero-bot")], false],
+    ["someone else is not him", [c("jmarrero-bot"), c("someone")], false],
+    ["answered again after a follow-up", [c("jmarrero"), c("jmarrero-bot"), c("jmarrero")], true],
   ];
   for (const [name, comments, want] of cases) it(name, () => assert.equal(answeredPending(comments), want));
 });

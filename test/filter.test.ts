@@ -17,11 +17,11 @@ function issue(nodeId: string, owner: string, repo: string, number: number, over
 
 function forgePr(repo: string, number: number, body = ""): ForgePr {
   return {
-    ref: { owner: "cgwalters-forge", repo, number },
-    url: `https://github.com/cgwalters-forge/${repo}/pull/${number}`,
+    ref: { owner: "jmarrero-forge", repo, number },
+    url: `https://github.com/jmarrero-forge/${repo}/pull/${number}`,
     title: `${repo} #${number}`,
     body,
-    author: "cgwalters-bot",
+    author: "jmarrero-bot",
     createdAt: "2026-01-10T00:00:00Z",
     updatedAt: "2026-01-11T00:00:00Z",
     draft: true,
@@ -33,14 +33,14 @@ const upstreamMeta = (upstream: string) => `Text\n\n<!-- bot-meta -->\n---\n- Up
 /** A queue with upstream and own work at each priority, and a nested ask. */
 function queue(): Entry[] {
   const items = [
-    issue("org-field", "cgwalters-bot", "praxis", 2, { org: "bootc-dev", priority: "P0" }),
-    issue("target-label", "cgwalters-forge", "tracker", 5, { labels: ["P0", "target:composefs"], priority: "P0" }),
-    issue("harness", "cgwalters-forge", "tracker", 54, { labels: ["target:cgwalters-bot"], priority: "P1" }),
-    issue("untargeted", "cgwalters-forge", "tracker", 60, { priority: "P2" }),
+    issue("org-field", "jmarrero-bot", "praxis", 2, { org: "bootc-dev", priority: "P0" }),
+    issue("target-label", "jmarrero-forge", "tracker", 5, { labels: ["P0", "target:composefs"], priority: "P0" }),
+    issue("harness", "jmarrero-forge", "tracker", 54, { labels: ["target:jmarrero-bot"], priority: "P1" }),
+    issue("untargeted", "jmarrero-forge", "tracker", 60, { priority: "P2" }),
     issue("upstream", "coreos", "bootupd", 1119, { priority: "P2" }),
     item("draft-no-org", { priority: "P1" }),
     // A question nested under the composefs issue: it goes where its parent goes.
-    issue("ask", "cgwalters-forge", "tracker", 70, { labels: ["question"], parent: { owner: "cgwalters-forge", repo: "tracker", number: 5 }, priority: "P1" }),
+    issue("ask", "jmarrero-forge", "tracker", 70, { labels: ["question"], parent: { owner: "jmarrero-forge", repo: "tracker", number: 5 }, priority: "P1" }),
   ];
   const prs = [forgePr("bootc", 30, upstreamMeta("bootc-dev/bootc")), forgePr("homegit", 31)];
   return buildEntries(items, prs, new Map());
@@ -54,18 +54,18 @@ describe("entryOrg", () => {
     assert.deepEqual(got, {
       "org-field": "bootc-dev",
       "target-label": "composefs",
-      harness: "cgwalters-bot",
+      harness: "jmarrero-bot",
       // The tracker's owner isn't a target.
       untargeted: NO_ORG,
       upstream: "coreos",
       "draft-no-org": NO_ORG,
-      "pr:cgwalters-forge/bootc#30": "bootc-dev",
-      "pr:cgwalters-forge/homegit#31": "cgwalters-forge",
+      "pr:jmarrero-forge/bootc#30": "bootc-dev",
+      "pr:jmarrero-forge/homegit#31": "jmarrero-forge",
     });
   });
 
   it("takes a forge PR's org from its board item when bot-meta names no upstream", () => {
-    const tracking = issue("t", "cgwalters-forge", "tracker", 9, { status: "Draft", org: "ostreedev", branch: ["https://github.com/cgwalters-forge/ostree/pull/4"] });
+    const tracking = issue("t", "jmarrero-forge", "tracker", 9, { status: "Draft", org: "ostreedev", branch: ["https://github.com/jmarrero-forge/ostree/pull/4"] });
     const [e] = buildEntries([tracking], [forgePr("ostree", 4)], new Map());
     assert.equal(e?.kind, "pr");
     assert.equal(entryOrg(e as Entry), "ostreedev");
@@ -74,13 +74,13 @@ describe("entryOrg", () => {
 
 describe("applyFilter", () => {
   const cases: [string, QueueFilter, string[]][] = [
-    ["all", ALL, ["org-field", "target-label", "draft-no-org", "harness", "untargeted", "upstream", "pr:cgwalters-forge/bootc#30", "pr:cgwalters-forge/homegit#31"]],
-    ["composefs", { scope: "composefs" }, ["org-field", "target-label", "upstream", "pr:cgwalters-forge/bootc#30"]],
-    ["infra", { scope: "infra" }, ["harness", "pr:cgwalters-forge/homegit#31"]],
+    ["all", ALL, ["org-field", "target-label", "draft-no-org", "harness", "untargeted", "upstream", "pr:jmarrero-forge/bootc#30", "pr:jmarrero-forge/homegit#31"]],
+    ["composefs", { scope: "composefs" }, ["org-field", "target-label", "upstream", "pr:jmarrero-forge/bootc#30"]],
+    ["infra", { scope: "infra" }, ["harness", "pr:jmarrero-forge/homegit#31"]],
     ["one org", { scope: { org: "composefs" } }, ["target-label"]],
     ["no org", { scope: { org: NO_ORG } }, ["draft-no-org", "untargeted"]],
     ["composefs P0", { scope: "composefs", priority: "P0" }, ["org-field", "target-label"]],
-    ["no priority", { scope: "all", priority: "No priority" }, ["pr:cgwalters-forge/bootc#30", "pr:cgwalters-forge/homegit#31"]],
+    ["no priority", { scope: "all", priority: "No priority" }, ["pr:jmarrero-forge/bootc#30", "pr:jmarrero-forge/homegit#31"]],
   ];
   for (const [name, f, want] of cases) it(name, () => assert.deepEqual(keysOf(applyFilter(queue(), f)), want));
 
@@ -103,8 +103,8 @@ describe("chips", () => {
       "bootc-dev 1 -> org:bootc-dev+P0",
       "composefs 2 -> org:composefs+P0",
       "coreos 0 -> org:coreos+P0",
-      "cgwalters-bot 0 -> org:cgwalters-bot+P0",
-      "cgwalters-forge 0 -> org:cgwalters-forge+P0",
+      "jmarrero-bot 0 -> org:jmarrero-bot+P0",
+      "jmarrero-forge 0 -> org:jmarrero-forge+P0",
       "no org 0 -> org:none+P0",
     ]);
     // Clicking the chosen priority clears it.

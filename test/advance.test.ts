@@ -192,7 +192,7 @@ describe("triageStops and decisionStops", () => {
   });
 
   it("steps through the decisions in place, skipping answered ones", () => {
-    const withRef = (n: number) => ({ ...item(n), ref: { owner: "cgwalters-forge", repo: "tracker", number: n } });
+    const withRef = (n: number) => ({ ...item(n), ref: { owner: "jmarrero-forge", repo: "tracker", number: n } });
     const ds = [7, 8, 9].map((n) => parseDecision({ ...withRef(n), title: `D${n}: pick` }));
     const answered = new Set(["PVTI_t8"]);
     const got = decisionStops(ds, answered, "#decisions");

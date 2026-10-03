@@ -7,8 +7,8 @@
 // question, its body lists the items the decision unblocks:
 //
 //     Unblocks:
-//     - https://github.com/cgwalters-forge/bootc/pull/15
-//     - https://github.com/cgwalters-forge/tracker/issues/160
+//     - https://github.com/jmarrero-forge/bootc/pull/15
+//     - https://github.com/jmarrero-forge/tracker/issues/160
 //
 // The URLs may also follow on the `Unblocks:` line itself, separated by
 // commas or spaces, bare or in code spans.

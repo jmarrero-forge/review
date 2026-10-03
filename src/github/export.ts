@@ -13,7 +13,7 @@ import { effectivePriority, type Entry, type EntryKind, SETTLED_GROUP } from "./
 export const SCHEMA = "review-queue/v1";
 
 /** Where the app is published; an entry's `appUrl` is this plus its route. */
-export const APP_URL = "https://cgwalters-forge.github.io/review/";
+export const APP_URL = "https://jmarrero-forge.github.io/review/";
 
 /**
  * What to do about an entry, as one verb:

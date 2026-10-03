@@ -113,8 +113,8 @@ describe("queueView", () => {
     assert.deepEqual(hrefs(".row:has(.state.bug)"), ["#item/PVTI_synthetic_draft", "#item/PVTI_synthetic_redacted", "#item/PVTI_synthetic_home_issue"]);
     const row = (id: string) => root.querySelector(`.row[href="#item/${id}"]`);
     assert.equal(row("PVTI_synthetic_question")?.querySelector(".why")?.textContent, "Which prefix?");
-    assert.match(row("PVTI_synthetic_closed_question")?.querySelector(".tag")?.textContent ?? "", /blocks cgwalters-bot\/elsewhere#5/);
-    assert.equal(row("PVTI_synthetic_epic")?.querySelector(".tag")?.textContent, "cgwalters-forge/tracker#20 · 1/3 sub-issues done");
+    assert.match(row("PVTI_synthetic_closed_question")?.querySelector(".tag")?.textContent ?? "", /blocks jmarrero-bot\/elsewhere#5/);
+    assert.equal(row("PVTI_synthetic_epic")?.querySelector(".tag")?.textContent, "jmarrero-forge/tracker#20 · 1/3 sub-issues done");
     assert.equal(row("PVTI_synthetic_review_ask")?.querySelector(".why")?.textContent, "Re-approve widget#50 at its new head, then the bot signs off");
     assert.equal(row("PVTI_synthetic_chore_ask")?.querySelector(".kind")?.textContent, "do");
     // Marked as the queue's: only it folds away on a phone, not the panes' summaries (their refresh notes).
@@ -240,8 +240,8 @@ describe("itemView", () => {
   const ctx: Context = {
     warnings: [EVIL],
     comments: [
-      { author: "cgwalters-bot", createdAt: "2026-01-01T00:00:00Z", url: "https://github.com/c/0", body: "Asked." },
-      { author: "cgwalters", createdAt: "2026-01-01T00:00:00Z", url: "https://github.com/c/1", body: "B\nfine" },
+      { author: "jmarrero-bot", createdAt: "2026-01-01T00:00:00Z", url: "https://github.com/c/0", body: "Asked." },
+      { author: "jmarrero", createdAt: "2026-01-01T00:00:00Z", url: "https://github.com/c/1", body: "B\nfine" },
       { author: "someone", createdAt: "2026-01-02T00:00:00Z", url: "javascript:alert(8)", body: EVIL },
     ],
     gists: [
@@ -314,7 +314,7 @@ describe("itemView", () => {
     assert.equal(a?.getAttribute("href"), "#pr/example-upstream/widget/50");
     assert.equal(a?.textContent, `Review example-upstream/widget#50 at ${"a".repeat(12)}`);
     assert.match(root.querySelector(".ask")?.textContent ?? "", /^Ask: Re-approve widget#50/);
-    assert.match(root.querySelector(".comment-ask .target")?.textContent ?? "", /comment as you on cgwalters-forge\/tracker#24/);
+    assert.match(root.querySelector(".comment-ask .target")?.textContent ?? "", /comment as you on jmarrero-forge\/tracker#24/);
     assert.equal(root.querySelector(".hdr .tag")?.textContent?.includes("review"), true);
   });
 
@@ -385,7 +385,7 @@ describe("itemView", () => {
       const confirms: string[] = [];
       let answer = false;
       Object.assign(win, { confirm: (m: string) => (confirms.push(m), answer) });
-      const { button, status } = runs(run(), async (u) => (reran.push(u), "https://github.com/cgwalters-forge/tracker/issues/25#c1"));
+      const { button, status } = runs(run(), async (u) => (reran.push(u), "https://github.com/jmarrero-forge/tracker/issues/25#c1"));
       button.click();
       await new Promise((r) => setTimeout(r, 0));
       assert.deepEqual(reran, []);
@@ -456,16 +456,16 @@ describe("itemView", () => {
     assert.deepEqual(radios, ["A", "B"]);
     assert.equal(root.querySelector("label[for=opt-A] .rec")?.textContent, "recommended");
     assert.equal(root.querySelector("label[for=opt-B] .rec"), null);
-    assert.match(root.querySelector(".target")?.textContent ?? "", /comment as you on cgwalters-forge\/tracker#21; the bot acts on it and closes the issue/);
-    assert.deepEqual([...root.querySelectorAll(".links a")].map((a) => a.textContent).slice(0, 2), ["cgwalters-forge/tracker#21", "blocks"]);
+    assert.match(root.querySelector(".target")?.textContent ?? "", /comment as you on jmarrero-forge\/tracker#21; the bot acts on it and closes the issue/);
+    assert.deepEqual([...root.querySelectorAll(".links a")].map((a) => a.textContent).slice(0, 2), ["jmarrero-forge/tracker#21", "blocks"]);
     assert.equal(root.querySelector(".comment.your-answer .meta")?.textContent?.endsWith("your answer: B"), true);
   });
 
   it("shows a parent's sub-issue tree, linking those on the board to the app", () => {
     const epic = fixture("PVTI_synthetic_epic");
     const sub = (number: number, state: string, labels: string[] = [], title = `sub ${number}`) => ({
-      ref: { owner: "cgwalters-forge", repo: "tracker", number },
-      url: `https://github.com/cgwalters-forge/tracker/issues/${number}`,
+      ref: { owner: "jmarrero-forge", repo: "tracker", number },
+      url: `https://github.com/jmarrero-forge/tracker/issues/${number}`,
       title,
       state,
       labels,
@@ -487,9 +487,9 @@ describe("itemView", () => {
     assert.deepEqual(
       lis.map((li) => [li.className, li.querySelector("a")?.getAttribute("href"), li.querySelector(".tag")?.textContent]),
       [
-        ["sub-issue open", "#item/PVTI_synthetic_question", "cgwalters-forge/tracker#21 · question"],
-        ["sub-issue closed", "https://github.com/cgwalters-forge/tracker/issues/30", "cgwalters-forge/tracker#30 · 2/2 sub-issues done"],
-        ["sub-issue open", "https://github.com/cgwalters-forge/tracker/issues/31", "cgwalters-forge/tracker#31"],
+        ["sub-issue open", "#item/PVTI_synthetic_question", "jmarrero-forge/tracker#21 · question"],
+        ["sub-issue closed", "https://github.com/jmarrero-forge/tracker/issues/30", "jmarrero-forge/tracker#30 · 2/2 sub-issues done"],
+        ["sub-issue open", "https://github.com/jmarrero-forge/tracker/issues/31", "jmarrero-forge/tracker#31"],
       ],
     );
     assert.equal(lis[2]?.querySelector("a")?.textContent, EVIL);
@@ -507,7 +507,7 @@ describe("itemView", () => {
   it("links the blocked item, bare or in backticks", () => {
     const blocksLink = (id: string) =>
       [...view(fixture(id)).querySelectorAll(".links a")].find((a) => a.textContent === "blocks")?.getAttribute("href");
-    assert.equal(blocksLink("PVTI_synthetic_question"), "https://github.com/cgwalters-forge/tracker/issues/20");
+    assert.equal(blocksLink("PVTI_synthetic_question"), "https://github.com/jmarrero-forge/tracker/issues/20");
     assert.equal(blocksLink("PVTI_synthetic_upstream_question"), "https://github.com/example-upstream/widget/pull/42");
   });
 

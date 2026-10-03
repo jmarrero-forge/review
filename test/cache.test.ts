@@ -299,9 +299,9 @@ describe("a 401", () => {
 describe("the approve guard", () => {
   const HEAD = "c".repeat(40);
   const MOVED = "d".repeat(40);
-  const ref = { owner: "cgwalters-forge", repo: "widget", number: 7 };
-  const PULL = `${API}/repos/cgwalters-forge/widget/pulls/7`;
-  const pull = (sha: string) => ({ number: 7, html_url: "https://github.com/cgwalters-forge/widget/pull/7", state: "open", head: { sha }, base: {} });
+  const ref = { owner: "jmarrero-forge", repo: "widget", number: 7 };
+  const PULL = `${API}/repos/jmarrero-forge/widget/pulls/7`;
+  const pull = (sha: string) => ({ number: 7, html_url: "https://github.com/jmarrero-forge/widget/pull/7", state: "open", head: { sha }, base: {} });
 
   it("reads the head from GitHub, never the cache", async () => {
     const factory = new IDBFactory();
@@ -310,7 +310,7 @@ describe("the approve guard", () => {
       if (method === "GET" && url === PULL) return etagged(pull(HEAD), '"h1"');
       return undefined;
     });
-    await s.gh.get("/repos/cgwalters-forge/widget/pulls/7");
+    await s.gh.get("/repos/jmarrero-forge/widget/pulls/7");
     await s.cache.flushed();
     // ...but on GitHub it moved, with the same ETag, which a conditional read would trust.
     const later = await session(factory, (method, url) => {
@@ -359,7 +359,7 @@ describe("staleAfterWrite", () => {
     });
     const gh = new GitHub(token, fetchImpl, new ResponseCache());
     await loadQueue(gh);
-    await gh.send("POST", "/repos/cgwalters-forge/tracker/issues/7/comments", { body: "A" });
+    await gh.send("POST", "/repos/jmarrero-forge/tracker/issues/7/comments", { body: "A" });
     calls.length = 0;
     await loadQueue(gh);
     const items = calls.find((c) => c.url.includes("/items"));

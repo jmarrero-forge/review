@@ -1,12 +1,12 @@
 // The question and answer formats: what the bot writes, what the app
-// writes as cgwalters, and what the bot parses back. Forge-neutral, and
+// writes as jmarrero, and what the bot parses back. Forge-neutral, and
 // free of DOM and network code so that the bot-side parser can mirror it
 // line for line.
 //
 // A question is an issue the bot opens in the tracker repository,
 // labelled `question`. Its body:
 //
-//     Blocks: https://github.com/cgwalters-forge/tracker/issues/12
+//     Blocks: https://github.com/jmarrero-forge/tracker/issues/12
 //     Context, any number of lines.
 //     Q: Which prefix?
 //     Options:
@@ -39,7 +39,7 @@
 
 /**
  * Commands the bot acts on when they appear on a line of their own in
- * cgwalters' comments. bot-pr matches `/promote`, `/draft` and `/ready` on
+ * jmarrero's comments. bot-pr matches `/promote`, `/draft` and `/ready` on
  * any line, after trimming whitespace, so free text must never contain
  * one: an answer saying "ok\n/promote" would promote a fork PR.
  */

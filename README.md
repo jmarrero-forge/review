@@ -1,7 +1,7 @@
 # review
 
 A small, fast review interface for work proposed by
-[cgwalters-bot](https://github.com/cgwalters-bot) (and by people): a
+[jmarrero-bot](https://github.com/jmarrero-bot) (and by people): a
 prioritized queue of questions and actions, forge draft PRs with their diffs
 and commit messages, in-place rewording, DCO sign-off as yourself, and
 `/promote`. It works against GitHub and against a Forgejo instance.
@@ -21,14 +21,14 @@ claude.ai-hosted prototype, and why it is being replaced, is described in
 ## What v0 does
 
 One ranked queue of everything waiting on you: the bot's open draft PRs
-in cgwalters-forge that you haven't approved or sent back at their
+in jmarrero-forge that you haven't approved or sent back at their
 current head, the bot's other PRs with something only you can do, and
 the Workstream board's "Needs human" items and Draft items (gists to
 read). Once a PR is open, everything about it happens on the PR, so
 those PRs are listed from GitHub itself, not from tracker asks:
 
 - **review requested**: its open PRs anywhere that request your review
-  (`is:pr is:open author:cgwalters-bot user-review-requested:cgwalters`).
+  (`is:pr is:open author:jmarrero-bot user-review-requested:jmarrero`).
   GitHub drops the request once you review, so a PR you reviewed leaves
   the queue until the bot requests it again.
 - **approve to re-sign**: its upstream PRs whose DCO check fails on
@@ -46,7 +46,7 @@ since are listed last, under "Changes requested, waiting on the bot":
 none of them is yours. P0 comes first (the board's Priority; a PR takes
 its board item's, found by the item id in a forge PR's bot-meta, else by
 the PR's URL in an item's Branch, In Review items included), then the
-oldest. A decision with no PR is an issue in cgwalters-forge/tracker, a
+oldest. A decision with no PR is an issue in jmarrero-forge/tracker, a
 question (or a chore), nested under the item it blocks; older review
 and chore asks about PRs still show until the bot closes them. Asks you
 answered, or the bot closed, move to the end until the bot acts. A
@@ -85,7 +85,7 @@ of the queue: the board is behind, and the bot should move it to Done.
   committer starts as promote's sign-off identity. GitHub then records you as the one who pushed the
   head, set the title and edited the body last, which is what `bot-pr
   promote` checks. Only `bot/` branches of the bot's PRs within a
-  cgwalters-forge fork, and no code edits yet.
+  jmarrero-forge fork, and no code edits yet.
   `test/e2e/make-it-mine.ts` runs it against a scratch PR.
 - **The diff** is unified or split (remembered per browser), syntax
   colored, with word-level changes marked and the unchanged lines
@@ -107,8 +107,8 @@ of the queue: the board is behind, and the bot should move it to Done.
   shown as plain text, and it is advice: it doesn't replace reading.
 - **A board item** shows its Why, links, description, gist and latest
   comments, rendered from markdown and sanitized. A parent issue in
-  cgwalters-forge/tracker also shows its sub-issues and their progress.
-- **A question** is an issue in cgwalters-forge/tracker labelled
+  jmarrero-forge/tracker also shows its sub-issues and their progress.
+- **A question** is an issue in jmarrero-forge/tracker labelled
   `question`. You answer with a tap on one of the options it offers (the
   recommended one is A), free text, or both; the answer is a plain
   comment by you on that issue, whose first line is the letter you
@@ -145,7 +145,7 @@ in the header turns this off (remembered per browser).
 
 **Active agents**, a strip atop the queue, shows how many agents are
 working against the target of about four (`AGENT_TARGET`), split
-between the harness (cgwalters-bot and cgwalters-forge) and upstream,
+between the harness (jmarrero-bot and jmarrero-forge) and upstream,
 with a row per agent: its name, item, status and age (since it
 started, for a worker; since its board item last changed, for one only
 the board knows).
@@ -165,7 +165,7 @@ board's Org field, else a tracker issue's `target:<org>` label, else the
 owner of the issue or PR (a tracker issue with neither has no org); a
 forge PR counts as its upstream's. Two
 presets split the queue in one click: **Composefs** is upstream work
-(every organization but cgwalters-bot and cgwalters-forge), **Our
+(every organization but jmarrero-bot and jmarrero-forge), **Our
 infra** is the bot's own harness. The filter is in the URL (`#composefs`,
 `#infra+P0`, `#org:bootc-dev`) and remembered per browser, so `#` and
 `u` come back to it.
@@ -189,10 +189,10 @@ Each shows its options with the recommended one marked, a note field,
 and an expandable list of the items it unblocks (the `Unblocks:` list
 in its body), and is answered in place exactly like a question in the
 queue: a comment by you whose first line is the letter you picked,
-followed by your note. Only the `cgwalters` login gets the forms.
+followed by your note. Only the `jmarrero` login gets the forms.
 
 The **news** pane (`n`) lists recently merged PRs in the bot
-(cgwalters-bot/homegit), its runner (cgwalters-devspace-sandbox, both
+(jmarrero-bot/homegit), its runner (jmarrero-devspace-sandbox, both
 copies) and this app, newest first, with the first paragraph of each
 description. Harness changes stand out: PRs labeled `harness`, or
 touching `agent.yml`, `bot-harness` or a `harness/` tree.
@@ -211,7 +211,7 @@ whole board as read now (a Done item leaving the board is not news). The first v
 **News** is a board field the coordinator sets to one dated line when
 something notable happens to an item (`bot-board set --news` in
 homegit); a new line shows highlighted under the item. Devspaces are the live runs of `devspace.yml` in
-bootc-dev/cgwalters-devspace-sandbox, each with its tailnet host, cores,
+bootc-dev/jmarrero-devspace-sandbox, each with its tailnet host, cores,
 uptime and time left (exact when the run's title carries its duration,
 as in "Devspace NAME (16c, 120m)"; for older runs only bounded by the
 longest, 4 hours), plus the last 24 hours: how many, their
@@ -219,7 +219,7 @@ core-hours per hour, and how they ended; cancelled is how `bot-devspace
 stop` ends one, so it counts as stopped, not failed. **Local agents** are
 the workers the coordinator runs on its own machine, which the browser
 can't see: the coordinator publishes them with `bot-heartbeat publish`
-(homegit) to one comment on cgwalters-forge/tracker#176, which the pane
+(homegit) to one comment on jmarrero-forge/tracker#1, which the pane
 reads with an ETag and lists with their item links, devspaces and
 elapsed time, warning when the heartbeat is more than 15 minutes old
 (and past the wake time it gave). **Usage** is the equivalent of
@@ -228,20 +228,20 @@ with its percent used and reset time, as the coordinator's status line
 last reported them, the tokens that machine's transcripts spent in
 each, and the top consumers (workers and the coordinator) by tokens.
 It is private: `bot-heartbeat publish` writes it to one comment on
-cgwalters-forge/bot-ops#1, a private repository, which the pane reads
+jmarrero-forge/bot-ops#1, a private repository, which the pane reads
 with your token; nothing of it is in the build or the public heartbeat,
 and a token that can't read that repository just gets a note saying
 so. Below that are the
 runs of `agent.yml` once that workflow exists there, the board's In
 Progress items split like the Composefs and Our infra presets, and the
 bot's recent public activity. The runner repo
-is outside cgwalters-forge, so a fine-grained token scoped to it can't
+is outside jmarrero-forge, so a fine-grained token scoped to it can't
 read the devspaces; a classic token can.
 
-The **capture bar** under the header, shown to cgwalters only, puts a
+The **capture bar** under the header, shown to jmarrero only, puts a
 note on the board for the bot: `b` focuses it from any view, and Enter
 files the title (Ctrl+Enter from the note) as an issue in
-cgwalters-forge/tracker labelled `needs-triage`, added to the Workstream
+jmarrero-forge/tracker labelled `needs-triage`, added to the Workstream
 board. A pasted GitHub link goes into the body and, with no title typed,
 suggests one (`owner/repo#N: its title`). The label is what the bot acts
 on: homegit's bot-notify wakes the coordinator for each of his open
@@ -306,7 +306,7 @@ npx review-queue --filter org:composefs    # one organization
 ```
 
 As in the app, `composefs` is all upstream work (every organization but
-cgwalters-bot and cgwalters-forge), `infra` is those two; to see one
+jmarrero-bot and jmarrero-forge), `infra` is those two; to see one
 organization, use `org:NAME`.
 
 Without `--json` or `--text`, it prints text on a terminal and JSON
@@ -333,7 +333,7 @@ npm run dev      # serves http://127.0.0.1:8787/
 ## Hosting and sign-in
 
 The app is published on GitHub Pages at
-<https://cgwalters-forge.github.io/review/> by the `pages` workflow, on
+<https://jmarrero-forge.github.io/review/> by the `pages` workflow, on
 every push to main. Until the sign-in relay exists (see "Hosting v0" in
 [docs/design.md](docs/design.md)), you sign in by pasting a personal
 access token. It stays in your browser (sessionStorage, or localStorage
@@ -343,7 +343,7 @@ page lists the scopes a token needs:
 - a short-lived classic token with `public_repo` and `read:project`
   covers everything (`repo` instead, to see private repositories);
 - a fine-grained token acts on one resource owner only: owned by
-  cgwalters-forge, with Pull requests and Issues read and write, it
+  jmarrero-forge, with Pull requests and Issues read and write, it
   reviews forge PRs and answers questions in the tracker; Make it mine
   also needs Contents read and write.
 

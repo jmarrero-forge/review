@@ -9,7 +9,7 @@
      "pull_request": {},
      "title": "resign",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-10T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -19,17 +19,17 @@
      "pull_request": {},
      "title": "rerun",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-11T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
     },
     {
-     "html_url": "https://github.com/cgwalters-bot/homegit/pull/45",
+     "html_url": "https://github.com/jmarrero-bot/homegit/pull/45",
      "pull_request": {},
      "title": "requested",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-45T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -39,7 +39,7 @@
      "pull_request": {},
      "title": "on the bot",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-12T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -49,7 +49,7 @@
      "pull_request": {},
      "title": "nothing",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-13T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -59,29 +59,29 @@
      "pull_request": {},
      "title": "closed",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-14T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
     },
     {
-     "html_url": "https://github.com/cgwalters-forge/workflow-compiler/pull/15",
+     "html_url": "https://github.com/jmarrero-forge/workflow-compiler/pull/15",
      "pull_request": {},
      "title": "forge repo, requested",
      "draft": false,
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-15T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
     },
     {
-     "html_url": "https://github.com/cgwalters-forge/bootc/pull/16",
+     "html_url": "https://github.com/jmarrero-forge/bootc/pull/16",
      "pull_request": {},
      "title": "forge draft",
      "draft": true,
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-16T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -92,33 +92,33 @@
    "total_count": 3,
    "items": [
     {
-     "html_url": "https://github.com/cgwalters-bot/homegit/pull/45",
+     "html_url": "https://github.com/jmarrero-bot/homegit/pull/45",
      "pull_request": {},
      "title": "requested",
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-45T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
     },
     {
-     "html_url": "https://github.com/cgwalters-forge/workflow-compiler/pull/15",
+     "html_url": "https://github.com/jmarrero-forge/workflow-compiler/pull/15",
      "pull_request": {},
      "title": "forge repo, requested",
      "draft": false,
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-15T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
     },
     {
-     "html_url": "https://github.com/cgwalters-forge/bootc/pull/16",
+     "html_url": "https://github.com/jmarrero-forge/bootc/pull/16",
      "pull_request": {},
      "title": "forge draft",
      "draft": true,
      "user": {
-      "login": "cgwalters-bot"
+      "login": "jmarrero-bot"
      },
      "created_at": "2026-08-16T00:00:00Z",
      "updated_at": "2026-09-01T00:00:00Z"
@@ -134,7 +134,7 @@
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -195,12 +195,12 @@
     "commit": {
      "message": "lib: Fix it\n\nGenerated-by: AI\n",
      "author": {
-      "name": "Colin Walters",
-      "email": "walters+llm@verbum.org"
+      "name": "Joseph Marrero Corchado",
+      "email": "jmarrero+llm@gmail.com"
      },
      "committer": {
-      "name": "Colin Walters",
-      "email": "walters+llm@verbum.org"
+      "name": "Joseph Marrero Corchado",
+      "email": "jmarrero+llm@gmail.com"
      }
     }
    }
@@ -212,7 +212,7 @@
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -225,7 +225,7 @@
   "/repos/bootc-dev/bootc/pulls/11/reviews?per_page=100": [
    {
     "user": {
-     "login": "cgwalters"
+     "login": "jmarrero"
     },
     "state": "COMMENTED",
     "commit_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -268,14 +268,14 @@
     }
    ]
   },
-  "/repos/cgwalters-bot/homegit/pulls/45": {
+  "/repos/jmarrero-bot/homegit/pulls/45": {
    "number": 45,
-   "html_url": "https://github.com/cgwalters-bot/homegit/pull/45",
+   "html_url": "https://github.com/jmarrero-bot/homegit/pull/45",
    "state": "open",
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "cccccccccccccccccccccccccccccccccccccccc",
@@ -285,8 +285,8 @@
     "ref": "main"
    }
   },
-  "/repos/cgwalters-bot/homegit/pulls/45/reviews?per_page=100": [],
-  "/repos/cgwalters-bot/homegit/issues/45/comments?per_page=100": [],
+  "/repos/jmarrero-bot/homegit/pulls/45/reviews?per_page=100": [],
+  "/repos/jmarrero-bot/homegit/issues/45/comments?per_page=100": [],
   "/repos/bootc-dev/bcvk/pulls/12": {
    "number": 12,
    "html_url": "https://github.com/bootc-dev/bcvk/pull/12",
@@ -294,7 +294,7 @@
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "dddddddddddddddddddddddddddddddddddddddd",
@@ -307,7 +307,7 @@
   "/repos/bootc-dev/bcvk/pulls/12/reviews?per_page=100": [
    {
     "user": {
-     "login": "cgwalters"
+     "login": "jmarrero"
     },
     "state": "CHANGES_REQUESTED",
     "commit_id": "dddddddddddddddddddddddddddddddddddddddd",
@@ -318,7 +318,7 @@
   "/repos/bootc-dev/bcvk/issues/12/comments?per_page=100": [
    {
     "user": {
-     "login": "cgwalters-bot"
+     "login": "jmarrero-bot"
     },
     "created_at": "2026-09-01T00:00:00Z",
     "body": "Tested"
@@ -372,7 +372,7 @@
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -407,7 +407,7 @@
    "draft": false,
    "mergeable_state": "blocked",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "ffffffffffffffffffffffffffffffffffffffff",
@@ -417,14 +417,14 @@
     "ref": "main"
    }
   },
-  "/repos/cgwalters-forge/workflow-compiler/pulls/15": {
+  "/repos/jmarrero-forge/workflow-compiler/pulls/15": {
    "number": 15,
-   "html_url": "https://github.com/cgwalters-forge/workflow-compiler/pull/15",
+   "html_url": "https://github.com/jmarrero-forge/workflow-compiler/pull/15",
    "state": "open",
    "draft": false,
    "mergeable_state": "clean",
    "user": {
-    "login": "cgwalters-bot"
+    "login": "jmarrero-bot"
    },
    "head": {
     "sha": "9999999999999999999999999999999999999999",
@@ -434,7 +434,7 @@
     "ref": "main"
    }
   },
-  "/repos/cgwalters-forge/workflow-compiler/pulls/15/reviews?per_page=100": [],
-  "/repos/cgwalters-forge/workflow-compiler/issues/15/comments?per_page=100": []
+  "/repos/jmarrero-forge/workflow-compiler/pulls/15/reviews?per_page=100": [],
+  "/repos/jmarrero-forge/workflow-compiler/issues/15/comments?per_page=100": []
  }
 }

@@ -77,7 +77,7 @@ describe("parseRoute", () => {
     ["#decisions", { route: "decisions" }],
     ["#decisions/x", { route: "queue" }],
     ["#item/PVTI_abc-_1", { route: "item", id: "PVTI_abc-_1" }],
-    ["#pr/cgwalters-forge/bootc/30", { route: "pr", ref: { owner: "cgwalters-forge", repo: "bootc", number: 30 } }],
+    ["#pr/jmarrero-forge/bootc/30", { route: "pr", ref: { owner: "jmarrero-forge", repo: "bootc", number: 30 } }],
     ["#pr/o/r.s_t/1", { route: "pr", ref: { owner: "o", repo: "r.s_t", number: 1 } }],
     ["#pr/o/r/0", { route: "queue" }],
     ["#pr/o/../1", { route: "queue" }],

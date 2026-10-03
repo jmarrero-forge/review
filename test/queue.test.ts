@@ -9,11 +9,11 @@ function item(nodeId: string, over: Partial<Item> = {}): Item {
   return { id: 0, nodeId, kind: "draft", title: nodeId, body: "", why: "", branch: [], gist: [], labels: [], assignees: [], status: "Needs human", ...over };
 }
 
-const TRACKER = "https://github.com/cgwalters-forge/tracker/issues";
+const TRACKER = "https://github.com/jmarrero-forge/tracker/issues";
 
 /** A tracker issue on the board. */
 function tracked(nodeId: string, number: number, over: Partial<Item> = {}): Item {
-  return item(nodeId, { kind: "issue", url: `${TRACKER}/${number}`, ref: { owner: "cgwalters-forge", repo: "tracker", number }, state: "open", ...over });
+  return item(nodeId, { kind: "issue", url: `${TRACKER}/${number}`, ref: { owner: "jmarrero-forge", repo: "tracker", number }, state: "open", ...over });
 }
 
 /** A question issue in the tracker blocking `blocks`. */
@@ -27,7 +27,7 @@ function pr(owner: string, repo: string, number: number, over: Partial<ForgePr> 
     url: `https://github.com/${owner}/${repo}/pull/${number}`,
     title: `${repo} #${number}`,
     body: "",
-    author: "cgwalters-bot",
+    author: "jmarrero-bot",
     createdAt: "2026-01-10T00:00:00Z",
     updatedAt: "2026-01-11T00:00:00Z",
     draft: true,
@@ -79,36 +79,36 @@ describe("buildEntries", () => {
       question("PVTI_q", 2, "https://github.com/elsewhere/r/issues/1", { priority: "P1", createdAt: "2026-01-05T00:00:00Z" }),
       item("PVTI_chore", { why: "Please rerun the job", priority: "P0", createdAt: "2026-02-01T00:00:00Z" }),
       item("PVTI_trackmeta", { status: "Draft", priority: "P0", branch: [] }),
-      item("PVTI_trackbranch", { status: "Draft", priority: "P2", branch: ["https://github.com/cgwalters-forge/b/pull/2"] }),
-      item("PVTI_stale", { status: "Draft", priority: "P0", branch: ["https://github.com/cgwalters-forge/c/pull/9"] }),
+      item("PVTI_trackbranch", { status: "Draft", priority: "P2", branch: ["https://github.com/jmarrero-forge/b/pull/2"] }),
+      item("PVTI_stale", { status: "Draft", priority: "P0", branch: ["https://github.com/jmarrero-forge/c/pull/9"] }),
       item("PVTI_gist", { status: "Draft", priority: "P1", gist: ["https://gist.github.com/x/1"], createdAt: "2026-01-01T00:00:00Z" }),
       item("PVTI_todo", { status: "Todo", priority: "P0" }),
     ];
     const prs = [
-      pr("cgwalters-forge", "a", 1, { body: meta("PVTI_trackmeta"), createdAt: "2026-01-20T00:00:00Z" }),
-      pr("cgwalters-forge", "b", 2),
-      pr("cgwalters-forge", "untracked", 3),
+      pr("jmarrero-forge", "a", 1, { body: meta("PVTI_trackmeta"), createdAt: "2026-01-20T00:00:00Z" }),
+      pr("jmarrero-forge", "b", 2),
+      pr("jmarrero-forge", "untracked", 3),
     ];
     const entries = buildEntries(items, prs, verdicts([]));
     assert.deepEqual(
       entries.map((e) => [e.key, e.kind, e.priority ?? "-"]),
       [
-        ["pr:cgwalters-forge/a#1", "pr", "P0"],
+        ["pr:jmarrero-forge/a#1", "pr", "P0"],
         ["item:PVTI_chore", "item", "P0"],
         ["item:PVTI_gist", "item", "P1"],
         ["item:PVTI_q", "question", "P1"],
-        ["pr:cgwalters-forge/b#2", "pr", "P2"],
-        ["pr:cgwalters-forge/untracked#3", "pr", "-"],
+        ["pr:jmarrero-forge/b#2", "pr", "P2"],
+        ["pr:jmarrero-forge/untracked#3", "pr", "-"],
       ],
     );
     const first = entries[0];
-    assert.equal(first?.href, "#pr/cgwalters-forge/a/1");
+    assert.equal(first?.href, "#pr/jmarrero-forge/a/1");
     assert.equal(first?.item?.nodeId, "PVTI_trackmeta");
     assert.equal(entries.find((e) => e.kind === "question")?.href, "#item/PVTI_q");
   });
 
   it("keeps a PR while it waits on him, lists it apart while it waits on the bot, and drops it and its Draft item otherwise", () => {
-    const items = [item("PVTI_t", { status: "Draft", priority: "P0", branch: ["https://github.com/cgwalters-forge/a/pull/1"] })];
+    const items = [item("PVTI_t", { status: "Draft", priority: "P0", branch: ["https://github.com/jmarrero-forge/a/pull/1"] })];
     // verdict, whether the bot replied since, listed, on the bot
     const cases: [Verdict["state"], boolean, boolean, boolean][] = [
       ["none", false, true, false],
@@ -121,10 +121,10 @@ describe("buildEntries", () => {
     ];
     for (const [state, replied, listed, bot] of cases) {
       const name = `${state}, replied: ${replied}`;
-      const entries = buildEntries(items, [pr("cgwalters-forge", "a", 1)], verdicts([["cgwalters-forge/a#1", state]]), true, new Set(), {
-        replied: new Set(replied ? ["cgwalters-forge/a#1"] : []),
+      const entries = buildEntries(items, [pr("jmarrero-forge", "a", 1)], verdicts([["jmarrero-forge/a#1", state]]), true, new Set(), {
+        replied: new Set(replied ? ["jmarrero-forge/a#1"] : []),
       });
-      assert.deepEqual(entries.map((e) => e.key), listed ? ["pr:cgwalters-forge/a#1"] : [], name);
+      assert.deepEqual(entries.map((e) => e.key), listed ? ["pr:jmarrero-forge/a#1"] : [], name);
       if (!listed) continue;
       assert.equal(entries[0]?.verdict?.state, state);
       assert.equal(onBot(entries[0] as Entry), bot, name);
@@ -133,9 +133,9 @@ describe("buildEntries", () => {
   });
 
   it("keeps a Needs human item about a forge PR as its own entry", () => {
-    const items = [item("PVTI_nh", { branch: ["https://github.com/cgwalters-forge/a/pull/1"], why: "Please look" })];
-    const keys = buildEntries(items, [pr("cgwalters-forge", "a", 1)], verdicts([])).map((e) => e.key);
-    assert.deepEqual(keys.sort(), ["item:PVTI_nh", "pr:cgwalters-forge/a#1"]);
+    const items = [item("PVTI_nh", { branch: ["https://github.com/jmarrero-forge/a/pull/1"], why: "Please look" })];
+    const keys = buildEntries(items, [pr("jmarrero-forge", "a", 1)], verdicts([])).map((e) => e.key);
+    assert.deepEqual(keys.sort(), ["item:PVTI_nh", "pr:jmarrero-forge/a#1"]);
   });
 
   it("takes ask kinds from tracker issues' labels only", () => {
@@ -205,7 +205,7 @@ describe("buildEntries", () => {
     const items = [
       tracked("PVTI_epic", 20, { priority: "P2" }),
       // A sub-issue of the epic, whatever its Blocks: line says.
-      question("PVTI_sub", 21, "https://github.com/o/r/issues/1", { parent: { owner: "cgwalters-forge", repo: "tracker", number: 20 }, priority: "P0" }),
+      question("PVTI_sub", 21, "https://github.com/o/r/issues/1", { parent: { owner: "jmarrero-forge", repo: "tracker", number: 20 }, priority: "P0" }),
       question("PVTI_sub2", 25, `${TRACKER}/20`, { priority: "P1" }),
       item("PVTI_up", { kind: "pr", url: upstream, ref: { owner: "example-upstream", repo: "widget", number: 42 }, priority: "P1" }),
       question("PVTI_upq", 22, upstream),
@@ -223,26 +223,26 @@ describe("buildEntries", () => {
       "item:PVTI_lone",
       "item:PVTI_qq",
     ]);
-    assert.equal(entries.find((e) => e.key === "item:PVTI_lone")?.blocks, "cgwalters-forge/tracker#99");
-    assert.equal(entries.find((e) => e.key === "item:PVTI_qq")?.blocks, "cgwalters-forge/tracker#23");
+    assert.equal(entries.find((e) => e.key === "item:PVTI_lone")?.blocks, "jmarrero-forge/tracker#99");
+    assert.equal(entries.find((e) => e.key === "item:PVTI_qq")?.blocks, "jmarrero-forge/tracker#23");
     assert.equal(entries.find((e) => e.key === "item:PVTI_up")?.blocks, undefined);
   });
 
   it("nests a question blocking a tracker issue under the forge PR that folded in its Draft item", () => {
     const items = [
-      tracked("PVTI_task", 30, { status: "Draft", priority: "P2", branch: ["https://github.com/cgwalters-forge/a/pull/1"] }),
-      question("PVTI_sub", 31, `${TRACKER}/30`, { parent: { owner: "cgwalters-forge", repo: "tracker", number: 30 } }),
+      tracked("PVTI_task", 30, { status: "Draft", priority: "P2", branch: ["https://github.com/jmarrero-forge/a/pull/1"] }),
+      question("PVTI_sub", 31, `${TRACKER}/30`, { parent: { owner: "jmarrero-forge", repo: "tracker", number: 30 } }),
       question("PVTI_blocks", 32, `${TRACKER}/30`),
       // Needs human, so not folded into its forge PR: its question nests
       // under its own entry, not the PR's.
       tracked("PVTI_nh", 40),
-      question("PVTI_nhq", 41, `${TRACKER}/40`, { parent: { owner: "cgwalters-forge", repo: "tracker", number: 40 } }),
+      question("PVTI_nhq", 41, `${TRACKER}/40`, { parent: { owner: "jmarrero-forge", repo: "tracker", number: 40 } }),
     ];
-    const prs = [pr("cgwalters-forge", "a", 1), pr("cgwalters-forge", "b", 2, { body: meta("PVTI_nh") })];
+    const prs = [pr("jmarrero-forge", "a", 1), pr("jmarrero-forge", "b", 2, { body: meta("PVTI_nh") })];
     const entries = buildEntries(items, prs, verdicts([]));
     assert.deepEqual(entries.map((e) => [e.key, e.item?.nodeId, e.children?.map((c) => c.key)]), [
-      ["pr:cgwalters-forge/a#1", "PVTI_task", ["item:PVTI_blocks", "item:PVTI_sub"]],
-      ["pr:cgwalters-forge/b#2", "PVTI_nh", undefined],
+      ["pr:jmarrero-forge/a#1", "PVTI_task", ["item:PVTI_blocks", "item:PVTI_sub"]],
+      ["pr:jmarrero-forge/b#2", "PVTI_nh", undefined],
       ["item:PVTI_nh", "PVTI_nh", ["item:PVTI_nhq"]],
     ]);
   });
@@ -267,19 +267,19 @@ describe("buildEntries", () => {
   });
 
   it("nests a question blocking a forge PR under the PR", () => {
-    const items = [question("PVTI_q", 1, "https://github.com/cgwalters-forge/a/pull/1")];
-    const entries = buildEntries(items, [pr("cgwalters-forge", "a", 1)], verdicts([]));
-    assert.deepEqual(entries.map((e) => [e.key, e.children?.map((c) => c.key)]), [["pr:cgwalters-forge/a#1", ["item:PVTI_q"]]]);
+    const items = [question("PVTI_q", 1, "https://github.com/jmarrero-forge/a/pull/1")];
+    const entries = buildEntries(items, [pr("jmarrero-forge", "a", 1)], verdicts([]));
+    assert.deepEqual(entries.map((e) => [e.key, e.children?.map((c) => c.key)]), [["pr:jmarrero-forge/a#1", ["item:PVTI_q"]]]);
   });
 
   it("drops no forge-only Draft item before the forge was read", () => {
-    const items = [item("PVTI_f", { status: "Draft", branch: ["https://github.com/cgwalters-forge/a/pull/1"] })];
+    const items = [item("PVTI_f", { status: "Draft", branch: ["https://github.com/jmarrero-forge/a/pull/1"] })];
     assert.deepEqual(buildEntries(items, [], verdicts([])).length, 0);
     assert.deepEqual(buildEntries(items, [], verdicts([]), false).map((e) => [e.key, e.kind]), [["item:PVTI_f", "item"]]);
   });
 
   it("keeps a Draft item whose Branch is not only forge PRs", () => {
-    const items = [item("PVTI_up", { status: "Draft", branch: ["https://github.com/up/r/compare/main...cgwalters-bot:bot/x"] })];
+    const items = [item("PVTI_up", { status: "Draft", branch: ["https://github.com/up/r/compare/main...jmarrero-bot:bot/x"] })];
     assert.deepEqual(buildEntries(items, [], verdicts([])).map((e) => e.kind), ["item"]);
   });
 
@@ -292,7 +292,7 @@ describe("buildEntries", () => {
       const items = [
         // Needs human about #3: folded into its PR, its question nested there.
         item("PVTI_nh3", { priority: "P1", branch: [`${UP}/3`] }),
-        question("PVTI_q3", 30, "https://github.com/cgwalters-bot/homegit/pull/9", { priority: "P1" }),
+        question("PVTI_q3", 30, "https://github.com/jmarrero-bot/homegit/pull/9", { priority: "P1" }),
         tracked("PVTI_t5", 5, { priority: "P2", branch: [`${UP}/5`] }),
         question("PVTI_q5", 31, `${TRACKER}/5`, { priority: "P2" }),
       ];
@@ -301,7 +301,7 @@ describe("buildEntries", () => {
         { pr: up(1), wait: wait(["resign"]) },
         { pr: up(2), wait: wait(["rerun"]) },
         { pr: up(3), wait: wait(["review-requested"]) },
-        { pr: pr("cgwalters-bot", "homegit", 9, { draft: false }), wait: wait([], true) },
+        { pr: pr("jmarrero-bot", "homegit", 9, { draft: false }), wait: wait([], true) },
         { pr: up(4, { title: "no item" }), wait: wait(["updated"]) },
       ];
       const entries = buildEntries(items, [], verdicts([]), true, new Set(), { others, linked });
@@ -315,7 +315,7 @@ describe("buildEntries", () => {
           ["item:PVTI_t5", "P2", undefined, ["item:PVTI_q5"]],
           ["pr:bootc-dev/bootc#2", "-", "rerun", undefined],
           ["pr:bootc-dev/bootc#4", "-", "updated", undefined],
-          ["pr:cgwalters-bot/homegit#9", "-", "", undefined],
+          ["pr:jmarrero-bot/homegit#9", "-", "", undefined],
         ],
       );
       const byKey = new Map(entries.map((e) => [e.key, e]));
@@ -342,22 +342,22 @@ describe("buildEntries", () => {
     });
 
     it("never lists a forge PR twice", () => {
-      const forge = pr("cgwalters-forge", "a", 1);
+      const forge = pr("jmarrero-forge", "a", 1);
       const entries = buildEntries([], [forge], verdicts([]), true, new Set(), { others: [{ pr: forge, wait: wait(["review-requested"]) }] });
-      assert.deepEqual(entries.map((e) => e.key), ["pr:cgwalters-forge/a#1"]);
+      assert.deepEqual(entries.map((e) => e.key), ["pr:jmarrero-forge/a#1"]);
     });
   });
 });
 
 describe("board items that are behind GitHub", () => {
-  const HOMEGIT = "https://github.com/cgwalters-bot/homegit/pull";
-  const SANDBOX = "https://github.com/cgwalters-forge/cgwalters-devspace-sandbox/pull";
+  const HOMEGIT = "https://github.com/jmarrero-bot/homegit/pull";
+  const SANDBOX = "https://github.com/jmarrero-forge/jmarrero-devspace-sandbox/pull";
   /** A board item that is a PR itself, as bot-land adds the bot's own. */
   const prItem = (nodeId: string, url: string, over: Partial<Item> = {}): Item => {
     const m = /github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)$/.exec(url);
     return item(nodeId, { kind: "pr", url, ref: { owner: m?.[1] ?? "", repo: m?.[2] ?? "", number: Number(m?.[3]) }, state: "open", status: "Draft", priority: "P0", ...over });
   };
-  const sandbox9 = pr("cgwalters-forge", "cgwalters-devspace-sandbox", 9);
+  const sandbox9 = pr("jmarrero-forge", "jmarrero-devspace-sandbox", 9);
   const review = (p: ForgePr, onBot = false) => ({ pr: { ...p, draft: false }, wait: { reasons: onBot ? [] : (["review-requested"] as PrWait["reasons"]), onBot } });
 
   // name, items, forge PRs, other PRs, the entries [key, kind, item it carries], the stale items
@@ -395,7 +395,7 @@ describe("board items that are behind GitHub", () => {
       ],
       [sandbox9],
       [],
-      [["pr:cgwalters-forge/cgwalters-devspace-sandbox#9", "pr", "PVTI_t60"]],
+      [["pr:jmarrero-forge/jmarrero-devspace-sandbox#9", "pr", "PVTI_t60"]],
       ["PVTI_h77"],
     ],
     [
@@ -403,23 +403,23 @@ describe("board items that are behind GitHub", () => {
       [prItem("PVTI_s9", `${SANDBOX}/9`, { priority: "P1" })],
       [sandbox9],
       [],
-      [["pr:cgwalters-forge/cgwalters-devspace-sandbox#9", "pr", "PVTI_s9"]],
+      [["pr:jmarrero-forge/jmarrero-devspace-sandbox#9", "pr", "PVTI_s9"]],
       [],
     ],
     [
       "the bot's own PR requesting his review is one entry, not also an item",
-      [prItem("PVTI_p4", "https://github.com/cgwalters-bot/praxis-credential-broker/pull/4")],
+      [prItem("PVTI_p4", "https://github.com/jmarrero-bot/praxis-credential-broker/pull/4")],
       [],
-      [review(pr("cgwalters-bot", "praxis-credential-broker", 4))],
-      [["pr:cgwalters-bot/praxis-credential-broker#4", "pr", "PVTI_p4"]],
+      [review(pr("jmarrero-bot", "praxis-credential-broker", 4))],
+      [["pr:jmarrero-bot/praxis-credential-broker#4", "pr", "PVTI_p4"]],
       [],
     ],
     [
       "so is one whose Draft tracker item holds it in Branch",
       [tracked("PVTI_t1", 1, { status: "Draft", branch: [`${HOMEGIT}/80`] })],
       [],
-      [review(pr("cgwalters-bot", "homegit", 80))],
-      [["pr:cgwalters-bot/homegit#80", "pr", "PVTI_t1"]],
+      [review(pr("jmarrero-bot", "homegit", 80))],
+      [["pr:jmarrero-bot/homegit#80", "pr", "PVTI_t1"]],
       [],
     ],
     [
@@ -427,7 +427,7 @@ describe("board items that are behind GitHub", () => {
       [tracked("PVTI_t2", 2, { status: "Draft", state: "closed", branch: [`${SANDBOX}/9`] })],
       [sandbox9],
       [],
-      [["pr:cgwalters-forge/cgwalters-devspace-sandbox#9", "pr", "PVTI_t2"]],
+      [["pr:jmarrero-forge/jmarrero-devspace-sandbox#9", "pr", "PVTI_t2"]],
       [],
     ],
     [
@@ -435,26 +435,26 @@ describe("board items that are behind GitHub", () => {
       [tracked("PVTI_t3", 3, { status: "Draft", branch: [`${SANDBOX.toUpperCase().replace("HTTPS://GITHUB.COM", "https://github.com")}/9`] })],
       [sandbox9],
       [],
-      [["pr:cgwalters-forge/cgwalters-devspace-sandbox#9", "pr", "PVTI_t3"]],
+      [["pr:jmarrero-forge/jmarrero-devspace-sandbox#9", "pr", "PVTI_t3"]],
       [],
     ],
     [
       "a Draft tracker item holding the bot's PR isn't listed apart while the PR waits on the bot",
       [tracked("PVTI_t1", 1, { status: "Draft", branch: [`${HOMEGIT}/80`] })],
       [],
-      [review(pr("cgwalters-bot", "homegit", 80), true)],
-      [["pr:cgwalters-bot/homegit#80", "pr", "PVTI_t1"]],
+      [review(pr("jmarrero-bot", "homegit", 80), true)],
+      [["pr:jmarrero-bot/homegit#80", "pr", "PVTI_t1"]],
       [],
     ],
     [
       "a question about a PR on the board as itself nests under the PR's row",
       [
-        prItem("PVTI_p4", "https://github.com/cgwalters-bot/praxis-credential-broker/pull/4", { status: "Needs human" }),
-        question("PVTI_q4", 7, "https://github.com/cgwalters-bot/praxis-credential-broker/pull/4"),
+        prItem("PVTI_p4", "https://github.com/jmarrero-bot/praxis-credential-broker/pull/4", { status: "Needs human" }),
+        question("PVTI_q4", 7, "https://github.com/jmarrero-bot/praxis-credential-broker/pull/4"),
       ],
       [],
-      [review(pr("cgwalters-bot", "praxis-credential-broker", 4))],
-      [["pr:cgwalters-bot/praxis-credential-broker#4", "pr", "PVTI_p4"]],
+      [review(pr("jmarrero-bot", "praxis-credential-broker", 4))],
+      [["pr:jmarrero-bot/praxis-credential-broker#4", "pr", "PVTI_p4"]],
       [],
     ],
   ];
@@ -467,13 +467,13 @@ describe("board items that are behind GitHub", () => {
   }
 
   it("drops a forge PR he approved together with its own Draft item", () => {
-    const entries = buildEntries([prItem("PVTI_s9", `${SANDBOX}/9`)], [sandbox9], new Map([["cgwalters-forge/cgwalters-devspace-sandbox#9", { state: "approved" as const }]]));
+    const entries = buildEntries([prItem("PVTI_s9", `${SANDBOX}/9`)], [sandbox9], new Map([["jmarrero-forge/jmarrero-devspace-sandbox#9", { state: "approved" as const }]]));
     assert.deepEqual(entries, []);
   });
 
   it("keeps a Needs human PR item whose PR waits on the bot, flagged as the bot's bug", () => {
-    const items = [prItem("PVTI_p4", "https://github.com/cgwalters-bot/praxis-credential-broker/pull/4", { status: "Needs human" })];
-    const entries = buildEntries(items, [], new Map(), true, new Set(), { others: [review(pr("cgwalters-bot", "praxis-credential-broker", 4), true)] });
-    assert.deepEqual(entries.map((e) => [e.key, e.bug === true]), [["item:PVTI_p4", true], ["pr:cgwalters-bot/praxis-credential-broker#4", false]]);
+    const items = [prItem("PVTI_p4", "https://github.com/jmarrero-bot/praxis-credential-broker/pull/4", { status: "Needs human" })];
+    const entries = buildEntries(items, [], new Map(), true, new Set(), { others: [review(pr("jmarrero-bot", "praxis-credential-broker", 4), true)] });
+    assert.deepEqual(entries.map((e) => [e.key, e.bug === true]), [["item:PVTI_p4", true], ["pr:jmarrero-bot/praxis-credential-broker#4", false]]);
   });
 });

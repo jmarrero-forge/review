@@ -7,12 +7,12 @@ import { fixture } from "./helpers.ts";
 const HEAD = "a".repeat(40);
 const MOVED = "b".repeat(40);
 const C1 = "c".repeat(40);
-const ref = { owner: "cgwalters-forge", repo: "widget", number: 7 };
+const ref = { owner: "jmarrero-forge", repo: "widget", number: 7 };
 
 function guide(over: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     schema: GUIDE_SCHEMA,
-    repo: "cgwalters-forge/widget",
+    repo: "jmarrero-forge/widget",
     pr: 7,
     head: HEAD,
     summary: "Adds X.\nRisk is in Y.",
@@ -92,7 +92,7 @@ describe("parseGuideBody", () => {
 describe("findGuide", () => {
   const review = (over: Partial<RawReview> & { g?: unknown } = {}): RawReview => {
     const { g, ...rest } = over;
-    return { user: { login: "cgwalters-bot" }, state: "COMMENTED", commit_id: HEAD, submitted_at: "2026-01-02T00:00:00Z", html_url: "https://github.com/r/1", body: body(g ?? guide()), ...rest };
+    return { user: { login: "jmarrero-bot" }, state: "COMMENTED", commit_id: HEAD, submitted_at: "2026-01-02T00:00:00Z", html_url: "https://github.com/r/1", body: body(g ?? guide()), ...rest };
   };
   const cases: [string, RawReview[], string, string | RegExp][] = [
     ["none", [], HEAD, "none"],
