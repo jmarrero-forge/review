@@ -156,10 +156,12 @@ export const RECENT_COMMENTS = 5;
 
 /** The repositories whose merged PRs the news pane shows: the bot, its runner and this app. */
 export const NEWS_REPOS: readonly string[] = [
-  "jmarrero-forge/homegit",
+  "jmarrero-bot/homegit",
   "jmarrero-forge/jmarrero-devspace-sandbox",
   "bootc-dev/jmarrero-devspace-sandbox",
   "jmarrero-forge/review",
+  "jmarrero-forge/agentic-job",
+  "jmarrero-forge/agent-board",
 ];
 /** Closed PRs read per repository (one page). */
 export const NEWS_PER_REPO = 30;
