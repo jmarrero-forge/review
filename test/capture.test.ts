@@ -146,7 +146,7 @@ describe("fileCapture", () => {
       const result = await fileCapture(new GitHub(token, fetchImpl), draft({ title: "T", priority }));
       assert.deepEqual(result, { number: 42, url: created.body.html_url });
       assert.equal(calls.filter((call) => call.url === ISSUES).length, 1);
-      assert.deepEqual((calls[2]?.body as { variables: unknown }).variables, { owner: "cgwalters-forge", number: 1, field: "Priority" });
+      assert.deepEqual((calls[2]?.body as { variables: unknown }).variables, { owner: "jmarrero-forge", number: 1, field: "Priority" });
       assert.deepEqual((calls[3]?.body as { variables: unknown }).variables, { project: "PVT_dynamic", item: "PVTI_created", field: fieldId, option: optionId });
       assert.match((calls[3]?.body as { query: string }).query, /updateProjectV2ItemFieldValue/);
       assert.equal(parseItem(rawBoardItem(87, { Priority: selected ?? "" })).priority, priority, "the queue reads the updated board field");
@@ -429,7 +429,7 @@ describe("captureBar", () => {
     assert.equal(loadDraft(storage).title, "T");
     assert.equal(m.q<HTMLButtonElement>("button[type=submit]").disabled, true);
     assert.match(m.status().textContent ?? "", /Filing outcome unknown/);
-    assert.equal(m.status().querySelector("a")?.getAttribute("href"), "https://github.com/cgwalters-forge/tracker/issues");
+    assert.equal(m.status().querySelector("a")?.getAttribute("href"), "https://github.com/jmarrero-forge/tracker/issues");
   });
   it("measures a long restored body and wrapped title only after visible mount without focus", () => {
     const storage = mem();

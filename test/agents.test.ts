@@ -226,7 +226,7 @@ describe("agentsBody", () => {
   });
 
   it("links a remote agent run to its run", () => {
-    const run = "https://github.com/bootc-dev/cgwalters-devspace-sandbox/actions/runs/123";
+    const run = "https://github.com/bootc-dev/jmarrero-devspace-sandbox/actions/runs/123";
     const el = agentsBody({ board: [item("PVTI_r", `${TRACKER}/9`, { lead: "remote", run })], local: heartbeat([]), warnings: [], at: NOW }, NOW);
     const a = el.querySelector<HTMLAnchorElement>(`.${AGENT_ROW_CLASS} a[href="${run}"]`);
     assert.equal(a?.textContent, "run ↗");

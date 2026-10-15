@@ -178,7 +178,7 @@ buttons (the recommended one marked, none picked for you), a short text box
 and Send. Chips over the rows (All, P0, P1, P2, each with its count) filter
 them by priority; the choice is remembered in this browser, and picking one
 never discards a half-written answer. Who may answer is said once, over the
-rows: nothing for cgwalters, the login for anyone else. If GitHub didn't say
+rows: nothing for jmarrero, the login for anyone else. If GitHub didn't say
 whose token this is when the page started (offline, a suspended phone), the
 page uses the login the cache was filled as, asks again at each poll, and
 meanwhile still offers the forms, saying that answers post as the token's
@@ -187,7 +187,7 @@ owner.
 **From people**, after Decisions, is a closed-by-default opt-in disclosure.
 Opening it starts its reads; while closed, people notifications are not polled.
 It combines open human-authored PRs requesting
-the operator's review (`review-requested:cgwalters -author:cgwalters-bot`)
+the operator's review (`review-requested:jmarrero -author:jmarrero-bot`)
 with participating unread mention/review-request notifications from the last
 14 days. Notifications require a recent explicit human comment/review mentioning
 the operator or a human review-request event; unknown actors and bot-only

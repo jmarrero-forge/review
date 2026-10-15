@@ -49,7 +49,7 @@ describe("confirmed shared agent execution", () => {
     const offline = fixtureFetch(FIXTURES);
     const gh = new GitHub(async () => "fixture", async (url, init) => {
       const path = new URL(url).pathname;
-      if (path.endsWith("/fields") || path.endsWith("/items") || path.includes("/issues/176/comments")) return Response.json({ message: "inaccessible" }, { status: 403 });
+      if (path.endsWith("/fields") || path.endsWith("/items") || path.includes("/tracker/issues/1/comments")) return Response.json({ message: "inaccessible" }, { status: 403 });
       return offline(url, init);
     });
     const state = await loadPageState(gh, NOW);
@@ -61,7 +61,7 @@ describe("confirmed shared agent execution", () => {
 
   it("merges run identity across Actions, board and remote heartbeat sightings, while retaining distinct local jobs", async () => {
     const runs = await readRuns();
-    runs.runs.push({ ...runs.runs[0]!, url: "https://github.com/BOOTC-DEV/CGWALTERS-DEVSPACE-SANDBOX/actions/runs/101/attempts/2#jobs" });
+    runs.runs.push({ ...runs.runs[0]!, url: "https://github.com/BOOTC-DEV/JMARRERO-DEVSPACE-SANDBOX/actions/runs/101/attempts/2#jobs" });
     const heartbeat = { ...local, workers: [...local.workers, { ...local.workers[0]! }] };
     const state = pageState({ active: { board, local: heartbeat, warnings: [], at: NOW }, runs }, NOW);
     assert.equal(state.agents.running, 3);

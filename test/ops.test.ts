@@ -431,7 +431,7 @@ describe("loadOps", () => {
       cache.put(url, { ...entry, fetchedAt: NOW - age }, JSON.stringify(entry.data).length);
     }
     const cached = gh.cacheOnly();
-    const eventUrl = calls.find((call) => new URL(call.url).pathname === "/users/cgwalters-bot/events/public")!.url;
+    const eventUrl = calls.find((call) => new URL(call.url).pathname === "/users/jmarrero-bot/events/public")!.url;
     await cached.get(eventUrl);
     const before = calls.length;
     const [active, ops] = await Promise.all([loadActive(cached, NOW), loadOps(cached, new Map(), NOW)]);

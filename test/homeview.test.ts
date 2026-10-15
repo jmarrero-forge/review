@@ -16,7 +16,7 @@ import { fixture, installDom } from "./helpers.ts";
 
 const win = installDom();
 const render = createRenderer(win as unknown as Parameters<typeof createRenderer>[0]);
-const TRACKER = "https://github.com/cgwalters-forge/tracker/issues";
+const TRACKER = "https://github.com/jmarrero-forge/tracker/issues";
 const text = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, " ").trim() ?? "";
 
 function hooks(open: SectionId[] = [], log: string[] = []): HomeHooks {
@@ -31,7 +31,7 @@ function hooks(open: SectionId[] = [], log: string[] = []): HomeHooks {
 function tracked(nodeId: string, number: number, over: Partial<Item> = {}): Item {
   return {
     id: 0, nodeId, kind: "issue", title: nodeId, body: "", why: "", branch: [], gist: [], labels: [], status: "Needs human",
-    url: `${TRACKER}/${number}`, ref: { owner: "cgwalters-forge", repo: "tracker", number }, state: "open", author: "cgwalters-bot", assignees: ["cgwalters"], ...over,
+    url: `${TRACKER}/${number}`, ref: { owner: "jmarrero-forge", repo: "tracker", number }, state: "open", author: "jmarrero-bot", assignees: ["jmarrero"], ...over,
   };
 }
 
@@ -43,7 +43,7 @@ function questions(n: number): Item[] {
 }
 
 const needsHooks = (sent: unknown[] = []) => ({
-  login: "cgwalters",
+  login: "jmarrero",
   now: Date.parse("2026-02-01T00:00:00Z"),
   render,
   labelOf: () => undefined,
@@ -147,8 +147,8 @@ describe("operator dashboard", () => {
   it("shows promotion actions once and keeps approved reruns, re-signs and context in Watching with states and reasons", () => {
     const home = homeSkeleton(hooks());
     const entries: Entry[] = ["rerun", "resign", "read", "promote", "write", "sent"].map((name, i) => {
-      const pr = { ref: { owner: "cgwalters-forge", repo: "widget", number: i + 1 }, url: `https://github.com/cgwalters-forge/widget/pull/${i + 1}`, title: name, body: ["promote", "write", "sent"].includes(name) ? `<!-- bot-meta -->\n- Upstream: \`upstream/widget\`\n- Contribution policy: \`${name === "write" ? "human-text" : "ai-ok"}\`\n<!-- /bot-meta -->` : "", author: "cgwalters-bot", createdAt: "", updatedAt: "", draft: true };
-      return { key: `pr:${i}`, kind: "pr", title: name, where: `widget#${i + 1}`, href: `#pr/cgwalters-forge/widget/${i + 1}`, pr, verdict: { state: name === "sent" ? "promoted" : "approved" }, wait: { reasons: name === "rerun" ? ["rerun"] : name === "resign" ? ["resign"] : [], onBot: false } };
+      const pr = { ref: { owner: "jmarrero-forge", repo: "widget", number: i + 1 }, url: `https://github.com/jmarrero-forge/widget/pull/${i + 1}`, title: name, body: ["promote", "write", "sent"].includes(name) ? `<!-- bot-meta -->\n- Upstream: \`upstream/widget\`\n- Contribution policy: \`${name === "write" ? "human-text" : "ai-ok"}\`\n<!-- /bot-meta -->` : "", author: "jmarrero-bot", createdAt: "", updatedAt: "", draft: true };
+      return { key: `pr:${i}`, kind: "pr", title: name, where: `widget#${i + 1}`, href: `#pr/jmarrero-forge/widget/${i + 1}`, pr, verdict: { state: name === "sent" ? "promoted" : "approved" }, wait: { reasons: name === "rerun" ? ["rerun"] : name === "resign" ? ["resign"] : [], onBot: false } };
     });
     const needs = buildNeeds({ entries });
     assert.equal(needs.find((n) => n.action === "promote")?.href, entries[3]?.pr?.url);

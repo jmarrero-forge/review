@@ -26,7 +26,7 @@ function client(options: { notificationsStatus?: number; searchStatus?: number; 
     if (issue) {
       const n = Number(issue[1]);
       if (n === options.failedThread) return { status: 404 };
-      return { body: data.search.find((s) => s.number === n) ?? { number: n, title: `Thread ${n}`, user: { login: "cgwalters-bot", type: "User" }, ...(n === 12 ? { pull_request: {} } : {}) } };
+      return { body: data.search.find((s) => s.number === n) ?? { number: n, title: `Thread ${n}`, user: { login: "jmarrero-bot", type: "User" }, ...(n === 12 ? { pull_request: {} } : {}) } };
     }
     if (/\/pulls\/\d+$/.test(path)) return { body: { head: { sha: "abc" } } };
     if (path.endsWith("/check-runs")) return options.failedCI ? { status: 403 } : { body: { total_count: options.truncatedCI ? 101 : 1, check_runs: [{ name: "test", status: "completed", conclusion: "success" }] } };
@@ -54,7 +54,7 @@ describe("From people loader", () => {
     assert.deepEqual(people.rows.map((r) => r.ci), ["success", "success", "n/a"]);
     assert.deepEqual(people.rows[0]?.notificationIds, ["101"]);
     assert.equal(people.rows[0]?.requestedAt, "2026-10-02T00:00:00Z");
-    assert.equal(people.rows[2]?.author, "cgwalters-bot", "a bot-authored thread with a human ask still counts");
+    assert.equal(people.rows[2]?.author, "jmarrero-bot", "a bot-authored thread with a human ask still counts");
     assert.deepEqual(people.warnings, []);
     const search = new URL(calls.find((c) => c.url.includes("/search/issues"))!.url);
     assert.equal(search.searchParams.get("q"), PEOPLE_QUERY);
@@ -119,10 +119,10 @@ describe("From people loader", () => {
 
   it("requires exact mentions and operator-targeted human review requests", () => {
     const base = { event: "commented", user: { login: "alice", type: "User" } };
-    assert.equal(humanAsk({ ...base, body: "@cgwalters-other" }, "mention"), false);
-    assert.equal(humanAsk({ ...base, body: "@CGWALTERS hello" }, "mention"), true);
+    assert.equal(humanAsk({ ...base, body: "@jmarrero-other" }, "mention"), false);
+    assert.equal(humanAsk({ ...base, body: "@JMARRERO hello" }, "mention"), true);
     assert.equal(humanAsk({ event: "review_requested", actor: base.user, requested_reviewer: { login: "other" } }, "review_requested"), false);
-    assert.equal(humanAsk({ ...base, event: "committed", body: "@cgwalters" }, "mention"), false);
+    assert.equal(humanAsk({ ...base, event: "committed", body: "@jmarrero" }, "mention"), false);
   });
 
   it("marks only the notification read and invalidates notification response caches", async () => {

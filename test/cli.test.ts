@@ -85,7 +85,7 @@ describe("review-queue --json", () => {
       argv: ["--json", "--filter", "composefs"],
       want: all.filter((l) => /widget#5|upstream_issue|review_ask|chore_ask|upstream_pr|upstream_question|bootc#3/.test(l)),
     },
-    { name: "infra: the bot's own", argv: ["--json", "--filter=infra"], want: ["pr:cgwalters-forge/homegit#9 comment", "item:PVTI_synthetic_home_issue report-bug"] },
+    { name: "infra: the bot's own", argv: ["--json", "--filter=infra"], want: ["pr:jmarrero-forge/homegit#9 comment", "item:PVTI_synthetic_home_issue report-bug"] },
     { name: "a bare priority", argv: ["--json", "--filter", "P0"], want: all.slice(0, 3) },
     { name: "one org and a priority", argv: ["--json", "--filter", "org:bootc-dev+P1"], want: [] },
     { name: "org and no priority", argv: ["--filter", "org:bootc-dev+none"], want: ["pr:jmarrero-forge/bootc#3 review"] },
