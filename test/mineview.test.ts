@@ -34,7 +34,7 @@ function detail(over: Partial<PrDetail> = {}): PrDetail {
     url: "https://github.com/jmarrero-forge/widget/pull/7",
     updatedAt: "2026-09-01T10:00:00Z",
     title: `widget: ${EVIL}`,
-    body: `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero/#llms\n\n${META}`,
+    body: `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero-bot#llms\n\n${META}`,
     author: "jmarrero-bot",
     state: "open",
     draft: true,
@@ -105,7 +105,7 @@ describe("mineSection", () => {
     const el = mount(detail(), hooks([]));
     assert.equal(el.querySelectorAll("img, script").length, 0);
     assert.equal(field<HTMLInputElement>(el, ".mine-title").value, `widget: ${EVIL}`);
-    assert.equal(field<HTMLTextAreaElement>(el, ".mine-body").value, `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero/#llms`);
+    assert.equal(field<HTMLTextAreaElement>(el, ".mine-body").value, `Why ${EVIL}\n\nGenerated-by: https://github.com/jmarrero-bot#llms`);
     assert.deepEqual([...el.querySelectorAll<HTMLTextAreaElement>(".mine-msg")].map((t) => t.value), [`first ${EVIL}\n\nGenerated-by: AI`, "second\n\nGenerated-by: AI"]);
     assert.equal(field<HTMLInputElement>(el, ".mine-name").value, "Joseph Marrero Corchado");
     assert.equal(field<HTMLInputElement>(el, ".mine-email").value, "jmarrero@redhat.com");
