@@ -183,7 +183,7 @@ describe("mapLimit", () => {
 });
 
 describe("current concrete PR asks", () => {
-  const pr: ForgePr = { ref, url: "https://github.com/cgwalters-forge/widget/pull/7", title: "Fix widget", body: "", author: "someone", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-10-01T00:00:00Z", draft: false };
+  const pr: ForgePr = { ref, url: "https://github.com/jmarrero-forge/widget/pull/7", title: "Fix widget", body: "", author: "someone", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-10-01T00:00:00Z", draft: false };
   it("rejects direct requests from human-authored PRs outside the bot search", async () => {
     const { fetchImpl } = scriptedFetch((_m, url) => ({ body: { items: new URL(url).searchParams.get("q") === REQUESTED_QUERY ? [{ html_url: pr.url, pull_request: {}, user: { login: "someone" }, draft: false }] : [] } }));
     const others = await loadOtherPrs(new GitHub(token, fetchImpl));
@@ -202,9 +202,9 @@ describe("current concrete PR asks", () => {
   ]) it(c.name, async () => {
     const askedAt = "2026-10-02T00:00:00Z";
     const { fetchImpl } = scriptedFetch((_m, url) => {
-      if (url === PULL) return { body: pull({ draft: c.draft, state: c.state ?? "open", merged_at: c.merged_at, requested_reviewers: c.requested ? [{ login: "cgwalters" }] : [] }) };
-      if (url.includes("/reviews?")) return { body: c.review ? [{ ...c.review, user: { login: "cgwalters" }, submitted_at: "2026-10-01T00:00:00Z" }] : [] };
-      if (url.includes("/timeline?")) return { body: [{ event: "review_requested", requested_reviewer: { login: "cgwalters" }, created_at: askedAt }] };
+      if (url === PULL) return { body: pull({ draft: c.draft, state: c.state ?? "open", merged_at: c.merged_at, requested_reviewers: c.requested ? [{ login: "jmarrero" }] : [] }) };
+      if (url.includes("/reviews?")) return { body: c.review ? [{ ...c.review, user: { login: "jmarrero" }, submitted_at: "2026-10-01T00:00:00Z" }] : [] };
+      if (url.includes("/timeline?")) return { body: [{ event: "review_requested", requested_reviewer: { login: "jmarrero" }, created_at: askedAt }] };
       if (url.includes("/comments?")) return { body: [] };
       return undefined;
     });
@@ -219,18 +219,18 @@ describe("current concrete PR asks", () => {
     const body = `<!-- bot-meta -->\n- Upstream: \`upstream/widget\`\n- Contribution policy: \`${policy}\`\n<!-- /bot-meta -->`;
     const { fetchImpl, calls } = scriptedFetch((_method, url) => {
       if (url === PULL) return { body: pull({ body }) };
-      if (url.includes("/reviews?")) return { body: [{ state: "APPROVED", commit_id: HEAD, user: { login: "cgwalters" }, submitted_at: "2026-10-01T00:00:00Z" }] };
+      if (url.includes("/reviews?")) return { body: [{ state: "APPROVED", commit_id: HEAD, user: { login: "jmarrero" }, submitted_at: "2026-10-01T00:00:00Z" }] };
       if (url.includes("/comments?")) return { body: [] };
       return undefined;
     });
-    const read = await loadWaiting(new GitHub(token, fetchImpl), [{ pr: { ...pr, body, author: "cgwalters-bot", draft: true }, requested: false }]);
+    const read = await loadWaiting(new GitHub(token, fetchImpl), [{ pr: { ...pr, body, author: "jmarrero-bot", draft: true }, requested: false }]);
     assert.deepEqual(read.errors, []);
     const entries = buildEntries([], [], new Map(), true, new Set(), { others: read.prs });
     assert.equal(read.prs.length, 1);
     assert.ok(calls.every((c) => c.method === "GET" && !c.url.includes("/commits?")), "no promotion attribution reads");
     const action = policy === "human-text" ? "write" : "promote";
     assert.deepEqual(buildNeeds({ entries }).map((n) => n.action), [action]);
-    const forgeEntries = buildEntries([], [{ ...pr, body, author: "cgwalters-bot", draft: true }], new Map([[refKey(ref), { state: "approved" }]]));
+    const forgeEntries = buildEntries([], [{ ...pr, body, author: "jmarrero-bot", draft: true }], new Map([[refKey(ref), { state: "approved" }]]));
     assert.deepEqual(buildNeeds({ entries: forgeEntries }).map((n) => n.action), [action]);
   });
 });

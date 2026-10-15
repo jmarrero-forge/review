@@ -1,7 +1,7 @@
 {
   "search": [
     {"number":1,"title":"Human review <script>","html_url":"https://github.com/upstream/widget/pull/1","state":"open","pull_request":{},"user":{"login":"alice","type":"User"}},
-    {"number":2,"title":"Configured bot","html_url":"https://github.com/upstream/widget/pull/2","state":"open","pull_request":{},"user":{"login":"cgwalters-bot","type":"User"}},
+    {"number":2,"title":"Configured bot","html_url":"https://github.com/upstream/widget/pull/2","state":"open","pull_request":{},"user":{"login":"jmarrero-bot","type":"User"}},
     {"number":3,"title":"App bot","html_url":"https://github.com/upstream/widget/pull/3","state":"open","pull_request":{},"user":{"login":"renovate[bot]","type":"Bot"}},
     {"number":4,"title":"Unknown actor","html_url":"https://github.com/upstream/widget/pull/4","state":"open","pull_request":{},"user":{"login":"unknown"}},
     {"number":13,"title":"Closed PR","html_url":"https://github.com/upstream/widget/pull/13","state":"closed","pull_request":{},"user":{"login":"alice","type":"User"}}
@@ -17,12 +17,12 @@
     {"id":"112","unread":true,"reason":"review_requested","updated_at":"2026-10-03T00:00:00Z","repository":{"full_name":"upstream/widget"},"subject":{"type":"PullRequest","url":"https://api.github.com/repos/upstream/widget/pulls/12"}}
   ],
   "timelines": {
-    "1":[{"event":"review_requested","actor":{"login":"alice","type":"User"},"requested_reviewer":{"login":"cgwalters"},"created_at":"2026-10-02T00:00:00Z"}],
-    "6":[{"event":"commented","user":{"login":"alice","type":"User"},"body":"@cgwalters can you reply?","created_at":"2026-10-02T00:00:00Z"},{"event":"commented","user":{"login":"cgwalters-bot","type":"User"},"body":"Automated update","created_at":"2026-10-03T00:00:00Z"}],
-    "7":[{"event":"commented","user":{"login":"cgwalters-bot","type":"User"},"body":"@cgwalters bot-only","created_at":"2026-10-03T00:00:00Z"},{"event":"labeled","actor":{"login":"alice","type":"User"},"created_at":"2026-10-03T00:00:00Z"}],
-    "8":[{"event":"commented","user":{"login":"alice","type":"User"},"body":"@cgwalters old mention","created_at":"2026-09-01T00:00:00Z"}],
-    "9":[{"event":"commented","user":{"login":"unknown"},"body":"@cgwalters unknown","created_at":"2026-10-03T00:00:00Z"}],
-    "10":[{"event":"commented","user":{"login":"cgwalters","type":"User"},"body":"@cgwalters own comment","created_at":"2026-10-03T00:00:00Z"}],
-    "12":[{"event":"review_requested","actor":{"login":"bob","type":"User"},"requested_reviewer":{"login":"cgwalters"},"created_at":"2026-10-03T00:00:00Z"}]
+    "1":[{"event":"review_requested","actor":{"login":"alice","type":"User"},"requested_reviewer":{"login":"jmarrero"},"created_at":"2026-10-02T00:00:00Z"}],
+    "6":[{"event":"commented","user":{"login":"alice","type":"User"},"body":"@jmarrero can you reply?","created_at":"2026-10-02T00:00:00Z"},{"event":"commented","user":{"login":"jmarrero-bot","type":"User"},"body":"Automated update","created_at":"2026-10-03T00:00:00Z"}],
+    "7":[{"event":"commented","user":{"login":"jmarrero-bot","type":"User"},"body":"@jmarrero bot-only","created_at":"2026-10-03T00:00:00Z"},{"event":"labeled","actor":{"login":"alice","type":"User"},"created_at":"2026-10-03T00:00:00Z"}],
+    "8":[{"event":"commented","user":{"login":"alice","type":"User"},"body":"@jmarrero old mention","created_at":"2026-09-01T00:00:00Z"}],
+    "9":[{"event":"commented","user":{"login":"unknown"},"body":"@jmarrero unknown","created_at":"2026-10-03T00:00:00Z"}],
+    "10":[{"event":"commented","user":{"login":"jmarrero","type":"User"},"body":"@jmarrero own comment","created_at":"2026-10-03T00:00:00Z"}],
+    "12":[{"event":"review_requested","actor":{"login":"bob","type":"User"},"requested_reviewer":{"login":"jmarrero"},"created_at":"2026-10-03T00:00:00Z"}]
   }
 }

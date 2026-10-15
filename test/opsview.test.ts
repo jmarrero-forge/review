@@ -44,14 +44,14 @@ describe("opsDetail", () => {
     const el = opsDetail(ops, NOW);
     assert.equal(el.querySelectorAll(".ds-row").length, 1);
     assert.equal(el.querySelector(".ds-row strong")?.textContent, "selinux-3327");
-    assert.equal(el.querySelector(".host")?.textContent, "cgwalters-devspace-36439387350");
+    assert.equal(el.querySelector(".host")?.textContent, "jmarrero-devspace-36439387350");
     assert.equal(el.querySelectorAll("details.history .past").length, 3);
     assert.deepEqual([...el.querySelectorAll(".lw strong")].map((n) => n.textContent), ["ops-v2", "bootc-2482"]);
-    assert.equal(el.querySelector(".lw a")?.getAttribute("href"), "https://github.com/cgwalters-forge/review/pull/16");
+    assert.equal(el.querySelector(".lw a")?.getAttribute("href"), "https://github.com/jmarrero-forge/review/pull/16");
     assert.equal(el.querySelectorAll(".ops-sec > .past-list > .past").length, ops.agents?.deployed ? ops.agents.runs.length : 0);
     assert.equal(el.querySelector(".work .title")?.textContent, ops.work?.[0]?.title);
     assert.equal(el.querySelector(".work .title a")?.getAttribute("href"), ops.work?.[0]?.url);
-    assert.equal(el.querySelector(".ev .what a")?.getAttribute("href"), "https://github.com/cgwalters-bot/homegit/pull/31");
+    assert.equal(el.querySelector(".ev .what a")?.getAttribute("href"), "https://github.com/jmarrero-bot/homegit/pull/31");
   });
 
   it("preserves untrusted work, run and event titles as inert literal text", () => {

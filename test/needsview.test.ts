@@ -15,18 +15,18 @@ import { installDom } from "./helpers.ts";
 
 const win = installDom();
 const render = createRenderer(win as unknown as Parameters<typeof createRenderer>[0]);
-const TRACKER = "https://github.com/cgwalters-forge/tracker/issues";
+const TRACKER = "https://github.com/jmarrero-forge/tracker/issues";
 const EVIL = "<img src=x onerror=alert(1)><script>alert(2)</script>[x](javascript:alert(3))";
 const text = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, " ").trim() ?? "";
 
 function tracked(nodeId: string, number: number, over: Partial<Item> = {}): Item {
   return {
     id: 0, nodeId, kind: "issue", title: nodeId, body: "", why: "", branch: [], gist: [], labels: [], status: "Needs human",
-    url: `${TRACKER}/${number}`, ref: { owner: "cgwalters-forge", repo: "tracker", number }, state: "open", author: "cgwalters-bot", assignees: ["cgwalters"], ...over,
+    url: `${TRACKER}/${number}`, ref: { owner: "jmarrero-forge", repo: "tracker", number }, state: "open", author: "jmarrero-bot", assignees: ["jmarrero"], ...over,
   };
 }
 
-const hooks = (sent: [string, Answer][] = [], login: string | undefined = "cgwalters"): NeedsHooks => ({
+const hooks = (sent: [string, Answer][] = [], login: string | undefined = "jmarrero"): NeedsHooks => ({
   login,
   now: Date.parse("2026-02-01T00:00:00Z"),
   render,
@@ -34,7 +34,7 @@ const hooks = (sent: [string, Answer][] = [], login: string | undefined = "cgwal
   send: async (n, a) => (sent.push([n.key, a]), "https://github.com/c/1"),
 });
 
-const BODY = "Blocks: https://github.com/cgwalters-forge/tracker/issues/9\nQ: Which prefix?\nOptions:\nA) this\nB) that\nRecommended: A, because it is safer\n";
+const BODY = "Blocks: https://github.com/jmarrero-forge/tracker/issues/9\nQ: Which prefix?\nOptions:\nA) this\nB) that\nRecommended: A, because it is safer\n";
 const first = (items: Item[]): Need => buildNeeds({ entries: buildEntries(items, [], new Map(), true) })[0] as Need;
 
 describe("needsRedraw", () => {
@@ -155,11 +155,11 @@ describe("needRow", () => {
   }
 
   it("leads with the Why's question when the body has no Q: line, as the bot writes it", () => {
-    const n = first([tracked("PVTI_q", 130, { labels: ["question"], body: NO_Q, title: "Stale bot PR: close or keep?", why: "Q: close the stale PR? Rec A.", priority: "P2", org: "cgwalters-bot", createdAt: "2026-01-18T00:00:00Z" })]);
+    const n = first([tracked("PVTI_q", 130, { labels: ["question"], body: NO_Q, title: "Stale bot PR: close or keep?", why: "Q: close the stale PR? Rec A.", priority: "P2", org: "jmarrero-bot", createdAt: "2026-01-18T00:00:00Z" })]);
     const row = needRow(n, hooks());
     assert.equal(text(row.querySelector(".title")), "close the stale PR? Rec A.");
     assert.equal(text(row.querySelector(".why")), "Stale bot PR: close or keep?");
-    assert.equal(text(row.querySelector(".sub")), "P2tracker#130 · cgwalters-bot · 2w");
+    assert.equal(text(row.querySelector(".sub")), "P2tracker#130 · jmarrero-bot · 2w");
     assert.equal(row.querySelectorAll("input[type=radio]").length, 2);
     assert.equal(row.getAttribute("data-priority"), "P2");
   });
@@ -169,7 +169,7 @@ describe("needRow", () => {
     const other = needRow(q, hooks([], "someone"));
     assert.equal(other.querySelector("form"), null);
     // Why is said once over the rows (needsHead), not in each.
-    assert.doesNotMatch(text(other), /Only cgwalters answers/);
+    assert.doesNotMatch(text(other), /Only jmarrero answers/);
     assert.equal(other.querySelector("a.action")?.textContent, "Answer");
     // A token GitHub hasn't named may be his: the form is there.
     assert.ok(needRow(q, { ...hooks(), login: undefined }).querySelector("form.answer"));
@@ -182,7 +182,7 @@ describe("needRow", () => {
   });
 
   it("labels a decision with its D-number, unblocks and whole question, and dims one answered here", () => {
-    const body = `Unblocks:\n- https://github.com/cgwalters-forge/bootc/pull/15\n\n${BODY}`;
+    const body = `Unblocks:\n- https://github.com/jmarrero-forge/bootc/pull/15\n\n${BODY}`;
     const d = parseDecision(tracked("I_7", 7, { title: "D3: Promote?", body, labels: ["question", "decision"] }));
     const n = buildNeeds({ entries: [], decisions: [d] })[0] as Need;
     const row = needRow(n, hooks());
@@ -280,14 +280,14 @@ describe("the bar over the rows", () => {
     assert.equal(text(none), "Nothing waits on you at P1.");
   });
 
-  it("says once who answers: nothing to cgwalters, the login to anyone else, and how to check for an unnamed token", () => {
+  it("says once who answers: nothing to jmarrero, the login to anyone else, and how to check for an unnamed token", () => {
     const who = (view: NeedsHooks) => text(needsHead(needs, view, document.createElement("div")).querySelector(".who"));
     assert.equal(who(hooks()), "");
-    assert.equal(who(hooks([], "someone")), "Only cgwalters answers; you are signed in as someone.");
+    assert.equal(who(hooks([], "someone")), "Only jmarrero answers; you are signed in as someone.");
     let checked = 0;
     const unnamed: NeedsHooks = { ...hooks(), login: undefined, loginError: `GET /user failed <b onclick="x">`, checkLogin: () => checked++ };
     const head = needsHead(needs, unnamed, document.createElement("div"));
-    assert.equal(text(head.querySelector(".who")), `GitHub hasn't confirmed whose token this is (GET /user failed <b onclick="x">). An answer is posted as the token's owner, and the bot acts only on answers from cgwalters. Check again`);
+    assert.equal(text(head.querySelector(".who")), `GitHub hasn't confirmed whose token this is (GET /user failed <b onclick="x">). An answer is posted as the token's owner, and the bot acts only on answers from jmarrero. Check again`);
     assert.equal(head.querySelector(".who b"), null);
     head.querySelector<HTMLButtonElement>(".who button")?.click();
     assert.equal(checked, 1);

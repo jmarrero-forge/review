@@ -7,7 +7,7 @@ import { buildEntries, type Entry } from "../src/github/queue.ts";
 import { parseDecision } from "../src/github/triage.ts";
 import type { PrWait } from "../src/github/waiting.ts";
 
-const TRACKER = "https://github.com/cgwalters-forge/tracker/issues";
+const TRACKER = "https://github.com/jmarrero-forge/tracker/issues";
 
 function item(nodeId: string, over: Partial<Item> = {}): Item {
   return { id: 0, nodeId, kind: "draft", title: nodeId, body: "", why: "", branch: [], gist: [], labels: [], assignees: [], status: "Needs human", ...over };
@@ -15,7 +15,7 @@ function item(nodeId: string, over: Partial<Item> = {}): Item {
 
 /** A tracker issue on the board. */
 function tracked(nodeId: string, number: number, over: Partial<Item> = {}): Item {
-  return item(nodeId, { kind: "issue", url: `${TRACKER}/${number}`, ref: { owner: "cgwalters-forge", repo: "tracker", number }, state: "open", author: "cgwalters-bot", assignees: ["cgwalters"], ...over });
+  return item(nodeId, { kind: "issue", url: `${TRACKER}/${number}`, ref: { owner: "jmarrero-forge", repo: "tracker", number }, state: "open", author: "jmarrero-bot", assignees: ["jmarrero"], ...over });
 }
 
 const QUESTION = "Q: which?\nOptions:\nA) this\nB) that\n";
@@ -31,7 +31,7 @@ function pr(owner: string, repo: string, number: number): ForgePr {
     url: `https://github.com/${owner}/${repo}/pull/${number}`,
     title: `${repo} #${number}`,
     body: "",
-    author: "cgwalters-bot",
+    author: "jmarrero-bot",
     createdAt: "2026-01-10T00:00:00Z",
     updatedAt: "2026-01-11T00:00:00Z",
     draft: true,
@@ -56,12 +56,12 @@ describe("representative operator asks", () => {
     { name: "failed CI without request", entry: { ...base, wait: { reasons: ["rerun"], onBot: false } } },
     { name: "DCO failure without request", entry: { ...base, wait: { reasons: ["resign"], onBot: false } } },
     { name: "bot turn", entry: { ...base, wait: { reasons: [], onBot: true } } },
-    { name: "approved human-text fork", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody }, wait: { reasons: [], onBot: false }, verdict: { state: "approved" } }, action: "write" },
-    { name: "approved non-draft human-text fork", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody, draft: false }, wait: { reasons: [], onBot: false }, verdict: { state: "approved" } }, action: "write" },
-    { name: "approved ordinary fork", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody.replace("human-text", "ai-ok") }, verdict: { state: "approved" } }, action: "promote" },
-    { name: "human-authored approved fork", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody, author: "someone" }, verdict: { state: "approved" } } },
-    { name: "human-text fork already promoted", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody }, verdict: { state: "promoted" } } },
-    { name: "old approval on human-text fork", entry: { ...base, pr: { ...pr("cgwalters-forge", "widget", 2), body: forkBody }, wait: { reasons: [], onBot: false }, verdict: { state: "approved-older" } } },
+    { name: "approved human-text fork", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody }, wait: { reasons: [], onBot: false }, verdict: { state: "approved" } }, action: "write" },
+    { name: "approved non-draft human-text fork", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody, draft: false }, wait: { reasons: [], onBot: false }, verdict: { state: "approved" } }, action: "write" },
+    { name: "approved ordinary fork", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody.replace("human-text", "ai-ok") }, verdict: { state: "approved" } }, action: "promote" },
+    { name: "human-authored approved fork", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody, author: "someone" }, verdict: { state: "approved" } } },
+    { name: "human-text fork already promoted", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody }, verdict: { state: "promoted" } } },
+    { name: "old approval on human-text fork", entry: { ...base, pr: { ...pr("jmarrero-forge", "widget", 2), body: forkBody }, wait: { reasons: [], onBot: false }, verdict: { state: "approved-older" } } },
     { name: "promote already sent", entry: { ...base, verdict: { state: "promoted" } } },
     { name: "new ask after an earlier promote comment", entry: { ...base, verdict: { state: "promoted", at: "2026-10-01T00:00:00Z" }, wait: { reasons: ["review-requested"], onBot: false, askedAt: "2026-10-02T00:00:00Z" } }, action: "review" },
   ];
@@ -146,7 +146,7 @@ describe("buildNeeds", () => {
   it("lists only explicit review requests on non-draft PRs", () => {
     const wait = (reasons: PrWait["reasons"], onBot = false): PrWait => ({ reasons, onBot });
     const none: Verdict = { state: "none" };
-    const forge = pr("cgwalters-forge", "bootc", 1);
+    const forge = pr("jmarrero-forge", "bootc", 1);
     const others = [
       { pr: { ...pr("o", "r", 2), draft: false }, wait: wait(["review-requested"]) },
       { pr: pr("o", "r", 3), wait: wait(["resign"]) },
@@ -154,7 +154,7 @@ describe("buildNeeds", () => {
       { pr: pr("o", "r", 5), wait: wait(["updated"]) },
       { pr: pr("o", "r", 6), wait: wait([], true) },
     ];
-    const entries = buildEntries([], [forge], new Map<string, Verdict>([["cgwalters-forge/bootc#1", none]]), true, new Set(), { others });
+    const entries = buildEntries([], [forge], new Map<string, Verdict>([["jmarrero-forge/bootc#1", none]]), true, new Set(), { others });
     const got = Object.fromEntries(rows(buildNeeds({ entries })));
     assert.deepEqual(got, {
       "pr:o/r#2": "review",
@@ -162,8 +162,8 @@ describe("buildNeeds", () => {
   });
 
   it("does not ask again for a PR he sent /promote on", () => {
-    const forge = pr("cgwalters-forge", "bootc", 1);
-    const entries = buildEntries([], [forge], new Map<string, Verdict>([["cgwalters-forge/bootc#1", { state: "promoted" }]]), true);
+    const forge = pr("jmarrero-forge", "bootc", 1);
+    const entries = buildEntries([], [forge], new Map<string, Verdict>([["jmarrero-forge/bootc#1", { state: "promoted" }]]), true);
     assert.deepEqual(buildNeeds({ entries }), []);
   });
 
@@ -196,7 +196,7 @@ describe("buildNeeds", () => {
     });
 
     it("is not attached to a row that is not a question", () => {
-      const entries = buildEntries([], [pr("cgwalters-forge", "tracker", 9)], new Map<string, Verdict>([["cgwalters-forge/tracker#9", { state: "none" }]]), true);
+      const entries = buildEntries([], [pr("jmarrero-forge", "tracker", 9)], new Map<string, Verdict>([["jmarrero-forge/tracker#9", { state: "none" }]]), true);
       const needs = buildNeeds({ entries, decisions: [decision("I_9", 9, "D3: x")] });
       assert.deepEqual(rows(needs), [["decision:I_9", "answer"]]);
       assert.equal(needs[0]?.decision?.number, 3);

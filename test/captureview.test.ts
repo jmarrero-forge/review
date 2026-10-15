@@ -22,7 +22,7 @@ function hooks(saved?: SavedDraft): CaptureHooks {
     removeItem: (key: string) => { mem.delete(key); },
   } as Storage;
   return {
-    storage, file: async () => ({ number: 42, url: "https://github.com/cgwalters-forge/tracker/issues/42" }),
+    storage, file: async () => ({ number: 42, url: "https://github.com/jmarrero-forge/tracker/issues/42" }),
     linkTitle: async () => EVIL, labels: async () => ["bug", "dispatch"], epics: async () => [{ number: 12, title: "Widget epic" }],
   };
 }
