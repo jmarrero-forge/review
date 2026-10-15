@@ -73,17 +73,12 @@ export const FEED_FIELD = {
 /** The Status of a finished item; the triage view shows everything else. */
 export const DONE = "Done";
 
-/** The board's Theme options, in the order the triage view lists them; others follow. */
-export const TRIAGE_THEMES: readonly string[] = [
-  "composefs-stable",
-  "image-builder",
-  "composefs-rs",
-  "harness",
-  "devspace",
-  "review-tooling",
-  "bootc-ci",
-  "ostree-family",
-];
+/**
+ * The board's Theme options, in the order the triage view lists them;
+ * others follow, by name. jmarrero's board has no Theme field yet, so
+ * none are ranked.
+ */
+export const TRIAGE_THEMES: readonly string[] = [];
 
 /** The board's Verdict options: keep it, merge it into its target, park it, or close it (for its target, if any). */
 export const VERDICTS = ["keep", "merge", "park", "close"] as const;
@@ -154,14 +149,16 @@ export const PAGE_SIZE = 100;
 /** Comments shown in the item view. */
 export const RECENT_COMMENTS = 5;
 
-/** The repositories whose merged PRs the news pane shows: the bot, its runner and this app. */
+/**
+ * The repositories whose merged PRs the news pane shows: the bot, its
+ * runner, this app, the tracker's workflows and the bot machine's image.
+ */
 export const NEWS_REPOS: readonly string[] = [
-  "jmarrero-bot/homegit",
-  "jmarrero-forge/jmarrero-devspace-sandbox",
+  "jmarrero-forge/homegit",
   "bootc-dev/jmarrero-devspace-sandbox",
   "jmarrero-forge/review",
-  "jmarrero-forge/agentic-job",
-  "jmarrero-forge/agent-board",
+  "jmarrero-forge/tracker",
+  "jmarrero/atomic-setup",
 ];
 /** Closed PRs read per repository (one page). */
 export const NEWS_PER_REPO = 30;
