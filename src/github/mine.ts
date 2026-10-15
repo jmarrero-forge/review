@@ -42,7 +42,7 @@ export const BRANCH_PREFIX = "bot/";
 /** Commits rewritten at most: more is a job for a checkout. */
 export const MAX_COMMITS = 50;
 /** The bot's trailer in PR bodies, which promote refuses in his text. */
-export const LLMS_TRAILER = "Generated-by: https://github.com/jmarrero/#llms";
+export const LLMS_TRAILER = "Generated-by: https://github.com/jmarrero-bot#llms";
 /**
  * bot-pr counts a `/promote` comment only if it is strictly later, to
  * the second, than the push: the latest of the fork's activity log entry
